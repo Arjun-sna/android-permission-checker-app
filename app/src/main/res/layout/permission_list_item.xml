@@ -1,12 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-  <TextView
-      android:id="@+id/permission_name"
-      android:layout_width="match_parent"
+  <in.arjsna.permissionchecker.lib.TypeFaceTextView
+      android:id="@+id/permission_group_name"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:textColor="#333333"
+      android:textColor="@color/black_shade_1"
+      android:textAllCaps="true"
+      android:text="CONTACTS"
+      android:textSize="14sp"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toTopOf="@+id/permission_group_description"
+      app:layout_constraintRight_toLeftOf="@+id/permission_group_app_count_label"
       />
-</LinearLayout>
+  <in.arjsna.permissionchecker.lib.TypeFaceTextView
+      android:id="@+id/permission_group_description"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:textColor="@color/black_shade_1"
+      android:text="access sensor data"
+      android:textSize="12sp"
+      app:layout_constraintTop_toBottomOf="@+id/permission_group_name"
+      app:layout_constraintLeft_toLeftOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintRight_toLeftOf="@+id/permission_group_app_count_label"
+      />
+  <in.arjsna.permissionchecker.lib.TypeFaceTextView
+      android:id="@+id/permission_group_app_count"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/black_shade_1"
+      android:text="8"
+      android:textSize="14sp"
+      app:layout_constraintLeft_toLeftOf="@+id/permission_group_app_count_label"
+      app:layout_constraintRight_toRightOf="@+id/permission_group_app_count_label"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toTopOf="@+id/permission_group_app_count_label"
+      />
+  <in.arjsna.permissionchecker.lib.TypeFaceTextView
+      android:id="@+id/permission_group_app_count_label"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@color/black_shade_1"
+      android:text="Apps"
+      android:textSize="12sp"
+      app:layout_constraintLeft_toRightOf="@+id/permission_group_description"
+      app:layout_constraintRight_toRightOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/permission_group_app_count"
+      app:layout_constraintBottom_toBottomOf="parent"
+      />
+</android.support.constraint.ConstraintLayout>

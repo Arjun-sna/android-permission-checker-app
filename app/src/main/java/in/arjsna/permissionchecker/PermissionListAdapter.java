@@ -45,7 +45,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
     TextView permissionName;
     public PermissionViewHolder(View itemView) {
       super(itemView);
-      permissionName = (TextView) itemView.findViewById(R.id.permission_name);
+      permissionName = (TextView) itemView.findViewById(R.id.permission_group_name);
     }
   }
 }

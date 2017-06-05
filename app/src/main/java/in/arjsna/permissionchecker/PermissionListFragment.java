@@ -84,59 +84,6 @@ public class PermissionListFragment extends Fragment {
         });
   }
 
-  private void  logAllPer() {
-    PackageManager packageManager = getActivity().getPackageManager();
-    List<PermissionGroupInfo> lstGroups = packageManager.getAllPermissionGroups(0);
-    for (PermissionGroupInfo pgi : lstGroups) {
-      CharSequence csPermissionGroupLabel = pgi.loadLabel(packageManager);
-      Log.e("perm", pgi.name + ": " + csPermissionGroupLabel.toString());
-
-      try {
-        List<PermissionInfo> lstPermissions = packageManager.queryPermissionsByGroup(pgi.name, 0);
-        for (PermissionInfo pi : lstPermissions) {
-          CharSequence csPermissionLabel = pi.loadLabel(packageManager);
-          Log.e("perm", "   " + pi.name + ": " + csPermissionLabel.toString());
-        }
-      } catch (Exception ex) {
-        ex.printStackTrace();
-      }
-    }
-  }
-
-  //private List<PermissionDetails> fetchAllApps() {
-  //  PackageManager packageManager = getActivity().getPackageManager();
-  //  List<ApplicationInfo> applicationInfos =
-  //      packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-  //  ArrayList<PermissionDetails> permissions = new ArrayList<>();
-  //
-  //  for (ApplicationInfo applicationInfo : applicationInfos) {
-  //    Log.d("test", "App: " + applicationInfo.name + " Package: " + applicationInfo.packageName);
-  //
-  //    try {
-  //      PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName,
-  //          PackageManager.GET_PERMISSIONS);
-  //
-  //      //Get Permissions
-  //      String[] requestedPermissions = packageInfo.requestedPermissions;
-  //      if (requestedPermissions != null) {
-  //        for (int i = 0; i < requestedPermissions.length; i++) {
-  //          Log.d("  permission ", requestedPermissions[i]);
-  //          permissions.add(requestedPermissions[i]);
-  //        }
-  //      }
-  //      PermissionInfo[] permissions1 = packageInfo.permissions;
-  //      if (permissions1 != null) {
-  //        for (PermissionInfo permissionInfo : permissions1) {
-  //          Log.d("  custom permission ", permissionInfo.name);
-  //        }
-  //      }
-  //    } catch (PackageManager.NameNotFoundException e) {
-  //      e.printStackTrace();
-  //    }
-  //  }
-  //  return permissions;
-  //}
-
   private Map<String, ArrayList<String>> fetchPermInfo() {
     PackageManager packageManager = getActivity().getPackageManager();
     List<ApplicationInfo> applicationInfos =
@@ -203,12 +150,7 @@ public class PermissionListFragment extends Fragment {
         PermissionInfo[] requestedPermissions = packageInfo.permissions;
         if (requestedPermissions != null) {
           for (PermissionInfo permissionInfo : requestedPermissions) {
-            //Log.d("*************", "**************************************************");
-            //Log.d("test************ ", permissionInfo.group + " ");
-            //Log.d("test************ ", permissionInfo.name + " ");
-            ////Log.d("test************ ", permissionInfo.loadDescription(packageManager).toString() + " ");
-            //Log.d("*************", "**************************************************");
-            permissions.add(permissionInfo.group == null ? permissionInfo.name : permissionInfo.group);
+            permissions.add(permissionInfo.group);
           }
         }
       } catch (PackageManager.NameNotFoundException e) {
