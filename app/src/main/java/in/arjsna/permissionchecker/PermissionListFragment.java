@@ -3,7 +3,6 @@ package in.arjsna.permissionchecker;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,10 +21,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 
 /**
@@ -53,28 +50,22 @@ public class PermissionListFragment extends Fragment {
   }
 
   private void makeRx() {
-    Single<List<PermissionDetails>> permissions = Single.fromCallable(new Callable<List<PermissionDetails>>() {
-      @Override public List<PermissionDetails> call() throws Exception {
-        Set<String> groups = fetchPermList();
-        ArrayList<PermissionDetails> list = new ArrayList<>();
-        for (String s : groups) {
-          Log.i("//////////////", "s");
-          PermissionDetails permissionDetails = new PermissionDetails();
-          permissionDetails.permissionName = s;
-          list.add(permissionDetails);
-        }
-        return list;
-      }
-    });
+    Single<List<PermissionGroupDetails>> permissions =
+        Single.fromCallable(new Callable<List<PermissionGroupDetails>>() {
+          @Override public List<PermissionGroupDetails> call() throws Exception {
+            Map<String, PermissionGroupDetails> groups = fetchPermList();
+            return new ArrayList<>(groups.values());
+          }
+        });
     permissions.subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new SingleObserver<List<PermissionDetails>>() {
+        .subscribe(new SingleObserver<List<PermissionGroupDetails>>() {
           @Override public void onSubscribe(@NonNull Disposable d) {
 
           }
 
-          @Override public void onSuccess(@NonNull List<PermissionDetails> strings) {
-            Log.i("Single subscriber test " , strings.size() + " ");
+          @Override public void onSuccess(@NonNull List<PermissionGroupDetails> strings) {
+            Log.i("Single subscriber test ", strings.size() + " ");
             permissionListAdapter.addAll(strings);
           }
 
@@ -133,30 +124,46 @@ public class PermissionListFragment extends Fragment {
     return permAppMap;
   }
 
-
-  private Set<String> fetchPermList() {
+  private Map<String, PermissionGroupDetails> fetchPermList() {
     PackageManager packageManager = getActivity().getPackageManager();
     List<ApplicationInfo> applicationInfos =
         packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-    Set<String> permissions = new HashSet<>();
+    Map<String, PermissionGroupDetails> permissionGroupDetailsMap = new HashMap<>();
+    PermissionGroupDetails miscPermissionGroup = new PermissionGroupDetails();
+    miscPermissionGroup.permissionGroupName = "MISC";
+    miscPermissionGroup.permissionGroupName = "Custom/Miscellaneous permissions";
+    miscPermissionGroup.appsCount = 0;
+    permissionGroupDetailsMap.put("MISC", miscPermissionGroup);
     for (ApplicationInfo applicationInfo : applicationInfos) {
-      //Log.d("test", "App: " + applicationInfo.name + " Package: " + applicationInfo.packageName);
-
       try {
         PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.packageName,
             PackageManager.GET_PERMISSIONS);
 
-        //Get Permissions
         PermissionInfo[] requestedPermissions = packageInfo.permissions;
         if (requestedPermissions != null) {
           for (PermissionInfo permissionInfo : requestedPermissions) {
-            permissions.add(permissionInfo.group);
+            if (permissionInfo.group == null) {
+              permissionGroupDetailsMap.get("MISC").appsCount++;
+              continue;
+            }
+            if (permissionGroupDetailsMap.containsKey(permissionInfo.group)) {
+              permissionGroupDetailsMap.get(permissionInfo.group).appsCount++;
+            } else {
+              PermissionGroupDetails permissionGroupDetails = new PermissionGroupDetails();
+              permissionGroupDetails.permissionGroupName = permissionInfo.group;
+              permissionGroupDetails.permissionGroupDes =
+                  permissionInfo.loadDescription(packageManager) == null ? "No desc"
+                      : permissionInfo.loadDescription(packageManager).toString();
+              permissionGroupDetails.appsCount = 1;
+              permissionGroupDetailsMap.put(permissionInfo.group, permissionGroupDetails);
+            }
           }
         }
-      } catch (PackageManager.NameNotFoundException e) {
+      } catch (Exception e) {
         e.printStackTrace();
       }
     }
-    return permissions;
+    Log.i("Map size ", permissionGroupDetailsMap.size() + " ");
+    return permissionGroupDetailsMap;
   }
 }

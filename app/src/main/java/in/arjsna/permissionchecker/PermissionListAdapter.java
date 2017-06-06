@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import in.arjsna.permissionchecker.lib.TypeFaceTextView;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,37 +16,48 @@ import java.util.List;
 
 public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAdapter.PermissionViewHolder> {
   private final Context context;
-  private final ArrayList<PermissionDetails> list = new ArrayList<>();
-  private final LayoutInflater layoutInflator;
+  private final ArrayList<PermissionGroupDetails> list = new ArrayList<>();
+  private final LayoutInflater layoutInflater;
 
   public PermissionListAdapter(Context context) {
     this.context = context;
-    layoutInflator = LayoutInflater.from(context);
+    layoutInflater = LayoutInflater.from(context);
   }
 
   @Override public PermissionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    View itemView = layoutInflator.inflate(R.layout.permission_list_item, parent, false);
+    View itemView = layoutInflater.inflate(R.layout.permission_list_item, parent, false);
     return new PermissionViewHolder(itemView);
   }
 
   @Override public void onBindViewHolder(PermissionViewHolder holder, int position) {
-    holder.permissionName.setText(list.get(position).permissionName);
+    String[] permissionSplit = list.get(position).permissionGroupName.split("\\.");
+    String permissionHeader= "";
+    if (permissionSplit.length > 0) {
+      permissionHeader = permissionSplit[permissionSplit.length - 1].replace("_", " ");
+    }
+    holder.permissionName.setText(permissionHeader);
+    holder.permissionDes.setText(list.get(position).permissionGroupName);
+    holder.appsCount.setText(String.valueOf(list.get(position).appsCount));
   }
 
   @Override public int getItemCount() {
     return list.size();
   }
 
-  public void addAll(List<PermissionDetails> strings) {
+  void addAll(List<PermissionGroupDetails> strings) {
     list.addAll(strings);
     notifyDataSetChanged();
   }
 
-  public static class PermissionViewHolder extends RecyclerView.ViewHolder {
+  static class PermissionViewHolder extends RecyclerView.ViewHolder {
     TextView permissionName;
+    TextView permissionDes;
+    TextView appsCount;
     public PermissionViewHolder(View itemView) {
       super(itemView);
       permissionName = (TextView) itemView.findViewById(R.id.permission_group_name);
+      permissionDes = (TextView) itemView.findViewById(R.id.permission_group_description);
+      appsCount = (TextView) itemView.findViewById(R.id.permission_group_app_count);
     }
   }
 }
