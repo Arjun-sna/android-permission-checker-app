@@ -39,11 +39,11 @@ public class AppListFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_app_list, container, false);
+    setUpToolBar();
     mAppListView = (RecyclerView)mRootView.findViewById(R.id.app_list);
     mAppListView.setLayoutManager(new GridLayoutManager(getContext(), 4));
     appListAdapter = new AppListAdapter(getActivity());
     mAppListView.setAdapter(appListAdapter);
-    setUpToolBar();
     packages = getArguments().getStringArrayList("packages");
     getAppDetails();
     return mRootView;
@@ -52,15 +52,14 @@ public class AppListFragment extends Fragment {
   private void getAppDetails() {
     Single<List<AppDetails>> listSingle = Single.fromCallable(new Callable<List<AppDetails>>() {
       @Override public List<AppDetails> call() throws Exception {
-        if (appDetailList != null) {
-          return appDetailList;
+        if (appDetailList == null) {
+          appDetailList = new ArrayList<>();
+          for (String packageName : packages) {
+            AppDetails appDetails = fetchDetail(packageName);
+            appDetailList.add(appDetails);
+          }
         }
-        List<AppDetails> appDetailsList = new ArrayList<>();
-        for (String packageName : packages) {
-          AppDetails appDetails = fetchDetail(packageName);
-          appDetailsList.add(appDetails);
-        }
-        return appDetailsList;
+        return appDetailList;
       }
     });
     listSingle.subscribeOn(Schedulers.computation())
@@ -71,7 +70,6 @@ public class AppListFragment extends Fragment {
           }
 
           @Override public void onSuccess(@NonNull List<AppDetails> appDetails) {
-            appDetailList = appDetails;
             appListAdapter.addAllAndNotify(appDetails);
           }
 

@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,14 +34,17 @@ public class AppDetailsFragment extends Fragment {
   private TextView appName;
   private RecyclerView permissionsList;
   private PermissionListAdapter permissionListAdapter;
+  private TextView noPermissionLabel;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_app_details, container, false);
+    setUpToolBar();
     String packageName = getArguments().getString("package_name");
     appIcon = (ImageView) mRootView.findViewById(R.id.app_picture);
     appName = (TextView) mRootView.findViewById(R.id.app_name);
+    noPermissionLabel = (TextView) mRootView.findViewById(R.id.no_permission_label);
     packageNameTv = (TextView) mRootView.findViewById(R.id.package_string);
     permissionsList = (RecyclerView) mRootView.findViewById(R.id.permission_list);
     permissionsList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -60,8 +64,9 @@ public class AppDetailsFragment extends Fragment {
         appDetails.name = packageInfo.applicationInfo.loadLabel(packageManager).toString();
         appDetails.icon = packageInfo.applicationInfo.loadIcon(packageManager);
         appDetails.packageName = packageName;
-        appDetails.permissionList =
-            new ArrayList<>(Arrays.asList(packageInfo.requestedPermissions));
+        if (packageInfo.requestedPermissions != null) {
+          appDetails.permissionList = new ArrayList<>(Arrays.asList(packageInfo.requestedPermissions));
+        }
         return appDetails;
       }
     });
@@ -76,7 +81,12 @@ public class AppDetailsFragment extends Fragment {
             appIcon.setImageDrawable(appDetails.icon);
             appName.setText(appDetails.name);
             packageNameTv.setText(appDetails.packageName);
-            permissionListAdapter.addAllAndNotify(appDetails.permissionList);
+            if (appDetails.permissionList == null) {
+              noPermissionLabel.setVisibility(View.VISIBLE);
+              permissionsList.setVisibility(View.GONE);
+            } else {
+              permissionListAdapter.addAllAndNotify(appDetails.permissionList);
+            }
           }
 
           @Override public void onError(@NonNull Throwable e) {
@@ -84,4 +94,11 @@ public class AppDetailsFragment extends Fragment {
           }
         });
   }
+
+  private void setUpToolBar() {
+    Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+    TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+    titleTextView.setText("App Details");
+  }
+
 }

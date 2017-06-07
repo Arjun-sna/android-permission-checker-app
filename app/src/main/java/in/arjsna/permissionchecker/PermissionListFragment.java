@@ -10,10 +10,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,6 +42,7 @@ public class PermissionListFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_permission_list, container, false);
+    setUpToolBar();
     permissionsList = (RecyclerView) mRootView.findViewById(R.id.permission_list);
     permissionGroupListAdapter = new PermissionGroupListAdapter(getContext());
     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -150,5 +153,11 @@ public class PermissionListFragment extends Fragment {
     miscPermissionGroup.permissionGroupName = "MISC PERMISSION";
     miscPermissionGroup.appsCount = 0;
     permissionGroupDetailsMap.put("MISC", miscPermissionGroup);
+  }
+
+  private void setUpToolBar() {
+    Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+    TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+    titleTextView.setText("Permission Groups");
   }
 }
