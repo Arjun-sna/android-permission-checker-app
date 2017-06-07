@@ -31,7 +31,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
     return new PermissionViewHolder(itemView);
   }
 
-  @Override public void onBindViewHolder(PermissionViewHolder holder, final int position) {
+  @Override public void onBindViewHolder(final PermissionViewHolder holder, int position) {
     String[] permissionSplit = list.get(position).permissionGroupName.split("\\.");
     String permissionHeader= "";
     if (permissionSplit.length > 0) {
@@ -43,7 +43,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList("packages", list.get(position).appPackages);
+        bundle.putStringArrayList("packages", new ArrayList<>(list.get(holder.getAdapterPosition()).appPackages));
         AppListFragment appListFragment = new AppListFragment();
         appListFragment.setArguments(bundle);
         ((AppCompatActivity)context).getSupportFragmentManager()
