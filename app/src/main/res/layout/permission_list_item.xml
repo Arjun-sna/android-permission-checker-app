@@ -16,9 +16,6 @@
       android:paddingRight="10dp"
       android:paddingTop="20dp"
       android:paddingBottom="20dp"
-      android:background="?android:attr/selectableItemBackground"
-      android:focusable="true"
-      android:clickable="true"
       >
     <TextView
         android:id="@+id/permission_group_name"

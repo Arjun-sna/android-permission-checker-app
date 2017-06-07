@@ -1,6 +1,8 @@
 package in.arjsna.permissionchecker;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
     return new PermissionViewHolder(itemView);
   }
 
-  @Override public void onBindViewHolder(PermissionViewHolder holder, int position) {
+  @Override public void onBindViewHolder(PermissionViewHolder holder, final int position) {
     String[] permissionSplit = list.get(position).permissionGroupName.split("\\.");
     String permissionHeader= "";
     if (permissionSplit.length > 0) {
@@ -38,6 +40,19 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
     holder.permissionName.setText(permissionHeader);
     holder.permissionDes.setText(list.get(position).permissionGroupName);
     holder.appsCount.setText(String.valueOf(list.get(position).appsCount));
+    holder.itemView.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("packages", list.get(position).appPackages);
+        AppListFragment appListFragment = new AppListFragment();
+        appListFragment.setArguments(bundle);
+        ((AppCompatActivity)context).getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.permission_container, appListFragment)
+            .addToBackStack("Permission Details")
+            .commit();
+      }
+    });
   }
 
   @Override public int getItemCount() {

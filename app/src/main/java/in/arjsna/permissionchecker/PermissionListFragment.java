@@ -143,11 +143,16 @@ public class PermissionListFragment extends Fragment {
         if (requestedPermissions != null) {
           for (PermissionInfo permissionInfo : requestedPermissions) {
             if (permissionInfo.group == null) {
-              permissionGroupDetailsMap.get("MISC").appsCount++;
+              PermissionGroupDetails groupDetails = permissionGroupDetailsMap.get("MISC");
+              groupDetails.appsCount++;
+              groupDetails.appPackages.add(applicationInfo.packageName);
               continue;
             }
             if (permissionGroupDetailsMap.containsKey(permissionInfo.group)) {
-              permissionGroupDetailsMap.get(permissionInfo.group).appsCount++;
+              PermissionGroupDetails groupDetails =
+                  permissionGroupDetailsMap.get(permissionInfo.group);
+              groupDetails.appsCount++;
+              groupDetails.appPackages.add(applicationInfo.packageName);
             } else {
               PermissionGroupDetails permissionGroupDetails = new PermissionGroupDetails();
               permissionGroupDetails.permissionGroupName = permissionInfo.group;
@@ -155,6 +160,7 @@ public class PermissionListFragment extends Fragment {
                   permissionInfo.loadDescription(packageManager) == null ? "No desc"
                       : permissionInfo.loadDescription(packageManager).toString();
               permissionGroupDetails.appsCount = 1;
+              permissionGroupDetails.appPackages.add(applicationInfo.packageName);
               permissionGroupDetailsMap.put(permissionInfo.group, permissionGroupDetails);
             }
           }
