@@ -33,6 +33,7 @@ public class AppListFragment extends Fragment {
   private ArrayList<AppDetails> applications;
   private RecyclerView mAppListView;
   private AppListAdapter appListAdapter;
+  private List<AppDetails> appDetailList;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -51,6 +52,9 @@ public class AppListFragment extends Fragment {
   private void getAppDetails() {
     Single<List<AppDetails>> listSingle = Single.fromCallable(new Callable<List<AppDetails>>() {
       @Override public List<AppDetails> call() throws Exception {
+        if (appDetailList != null) {
+          return appDetailList;
+        }
         List<AppDetails> appDetailsList = new ArrayList<>();
         for (String packageName : packages) {
           AppDetails appDetails = fetchDetail(packageName);
@@ -67,6 +71,7 @@ public class AppListFragment extends Fragment {
           }
 
           @Override public void onSuccess(@NonNull List<AppDetails> appDetails) {
+            appDetailList = appDetails;
             appListAdapter.addAllAndNotify(appDetails);
           }
 
@@ -83,6 +88,7 @@ public class AppListFragment extends Fragment {
       ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
       appDetails.name = applicationInfo.loadLabel(packageManager).toString();
       appDetails.icon = packageManager.getApplicationIcon(packageName);
+      appDetails.packageName = packageName;
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();
     }

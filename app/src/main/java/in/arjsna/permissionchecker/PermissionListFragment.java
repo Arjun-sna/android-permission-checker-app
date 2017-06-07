@@ -1,8 +1,6 @@
 package in.arjsna.permissionchecker;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
@@ -34,7 +32,7 @@ import java.util.concurrent.Callable;
 
 public class PermissionListFragment extends Fragment {
   private View mRootView;
-  private PermissionListAdapter permissionListAdapter;
+  private PermissionGroupListAdapter permissionGroupListAdapter;
   private RecyclerView permissionsList;
   private ArrayList<PermissionGroupDetails>  permissionList;
 
@@ -43,14 +41,14 @@ public class PermissionListFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_permission_list, container, false);
     permissionsList = (RecyclerView) mRootView.findViewById(R.id.permission_list);
-    permissionListAdapter = new PermissionListAdapter(getContext());
+    permissionGroupListAdapter = new PermissionGroupListAdapter(getContext());
     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
     permissionsList.setLayoutManager(layoutManager);
-    permissionsList.setAdapter(permissionListAdapter);
+    permissionsList.setAdapter(permissionGroupListAdapter);
     if (permissionList == null) {
       makeRx();
     } else {
-      permissionListAdapter.addAll(permissionList);
+      permissionGroupListAdapter.addAll(permissionList);
     }
     return mRootView;
   }
@@ -73,7 +71,7 @@ public class PermissionListFragment extends Fragment {
           @Override public void onSuccess(@NonNull ArrayList<PermissionGroupDetails> groupDetailsList) {
             Log.i("Single subscriber test ", groupDetailsList.size() + " ");
             permissionList = groupDetailsList;
-            permissionListAdapter.addAll(groupDetailsList);
+            permissionGroupListAdapter.addAll(groupDetailsList);
           }
 
           @Override public void onError(@NonNull Throwable e) {

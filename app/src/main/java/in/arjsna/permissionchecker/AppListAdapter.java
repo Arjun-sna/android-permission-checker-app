@@ -1,6 +1,8 @@
 package in.arjsna.permissionchecker;
 
 import android.content.Context;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,9 +31,22 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
   }
 
   @Override public void onBindViewHolder(AppListViewHolder holder, int position) {
-    AppDetails appDetails = item.get(position);
+    final AppDetails appDetails = item.get(position);
     holder.appIcon.setImageDrawable(appDetails.icon);
     holder.appName.setText(appDetails.name);
+    holder.itemView.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        Bundle bundle = new Bundle();
+        bundle.putString("package_name", appDetails.packageName);
+        AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
+        appDetailsFragment.setArguments(bundle);
+        ((AppCompatActivity)context).getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.permission_container, appDetailsFragment)
+            .addToBackStack("appdetail")
+            .commit();
+      }
+    });
   }
 
   @Override public int getItemCount() {
