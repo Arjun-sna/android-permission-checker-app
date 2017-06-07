@@ -1,6 +1,7 @@
 package in.arjsna.permissionchecker;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +16,8 @@ import java.util.List;
  * Created by arjun on 4/6/17.
  */
 
-public class PermissionGroupListAdapter extends RecyclerView.Adapter<PermissionGroupListAdapter.PermissionViewHolder> {
+public class PermissionGroupListAdapter
+    extends RecyclerView.Adapter<PermissionGroupListAdapter.PermissionViewHolder> {
   private final Context context;
   private final ArrayList<PermissionGroupDetails> list = new ArrayList<>();
   private final LayoutInflater layoutInflater;
@@ -32,26 +34,40 @@ public class PermissionGroupListAdapter extends RecyclerView.Adapter<PermissionG
 
   @Override public void onBindViewHolder(final PermissionViewHolder holder, int position) {
     String[] permissionSplit = list.get(position).permissionGroupName.split("\\.");
-    String permissionHeader= "";
+    String permissionHeader = "";
     if (permissionSplit.length > 0) {
       permissionHeader = permissionSplit[permissionSplit.length - 1].replace("_", " ");
     }
     holder.permissionName.setText(permissionHeader);
+    setDrawable(holder, ResourceMap.resourceMap.get(permissionHeader));
     holder.permissionDes.setText(list.get(position).permissionGroupDes);
     holder.appsCount.setText(String.valueOf(list.get(position).appsCount));
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         Bundle bundle = new Bundle();
-        bundle.putStringArrayList("packages", new ArrayList<>(list.get(holder.getAdapterPosition()).appPackages));
+        bundle.putStringArrayList("packages",
+            new ArrayList<>(list.get(holder.getAdapterPosition()).appPackages));
         AppListFragment appListFragment = new AppListFragment();
         appListFragment.setArguments(bundle);
-        ((AppCompatActivity)context).getSupportFragmentManager()
+        ((AppCompatActivity) context).getSupportFragmentManager()
             .beginTransaction()
             .replace(R.id.permission_container, appListFragment)
             .addToBackStack("Permission Details")
             .commit();
       }
     });
+  }
+
+  private void setDrawable(PermissionViewHolder holder, Integer id) {
+    if (id == null) {
+      id = R.drawable.ic_android;
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      holder.permissionName.setCompoundDrawablesRelativeWithIntrinsicBounds(id, 0, 0, 0);
+    } else {
+      holder.permissionName.setCompoundDrawables(context.getResources().getDrawable(id), null, null,
+          null);
+    }
   }
 
   @Override public int getItemCount() {
@@ -67,6 +83,7 @@ public class PermissionGroupListAdapter extends RecyclerView.Adapter<PermissionG
     TextView permissionName;
     TextView permissionDes;
     TextView appsCount;
+
     public PermissionViewHolder(View itemView) {
       super(itemView);
       permissionName = (TextView) itemView.findViewById(R.id.permission_group_name);
