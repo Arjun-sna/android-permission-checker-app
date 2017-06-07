@@ -44,7 +44,7 @@ public class AppDetailsFragment extends Fragment {
     String packageName = getArguments().getString("package_name");
     appIcon = (ImageView) mRootView.findViewById(R.id.app_picture);
     appName = (TextView) mRootView.findViewById(R.id.app_name);
-    noPermissionLabel = (TextView) mRootView.findViewById(R.id.no_permission_label);
+    noPermissionLabel = (TextView) mRootView.findViewById(R.id.detail_label);
     packageNameTv = (TextView) mRootView.findViewById(R.id.package_string);
     permissionsList = (RecyclerView) mRootView.findViewById(R.id.permission_list);
     permissionsList.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -82,9 +82,9 @@ public class AppDetailsFragment extends Fragment {
             appName.setText(appDetails.name);
             packageNameTv.setText(appDetails.packageName);
             if (appDetails.permissionList == null) {
-              noPermissionLabel.setVisibility(View.VISIBLE);
-              permissionsList.setVisibility(View.GONE);
+              noPermissionLabel.setText("No permissions required");
             } else {
+              noPermissionLabel.setText(getString(R.string.permission_count, appDetails.permissionList.size()));
               permissionListAdapter.addAllAndNotify(appDetails.permissionList);
             }
           }
