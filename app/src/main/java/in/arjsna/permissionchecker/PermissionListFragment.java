@@ -1,9 +1,12 @@
 package in.arjsna.permissionchecker;
 
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -81,23 +84,16 @@ public class PermissionListFragment extends Fragment {
 
   private Map<String, PermissionGroupDetails> fetchPermList() {
     PackageManager packageManager = getActivity().getPackageManager();
-    List<PackageInfo> applicationInfos =
-        packageManager.getInstalledPackages(PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
+    Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+    mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+    List<ResolveInfo> applicationInfos =
+        packageManager.queryIntentActivities(mainIntent, PackageManager.GET_META_DATA);
     Map<String, PermissionGroupDetails> permissionGroupDetailsMap = new HashMap<>();
-    PermissionGroupDetails miscPermissionGroup = new PermissionGroupDetails();
-    miscPermissionGroup.permissionGroupName = "MISC";
-    miscPermissionGroup.permissionGroupName = "Custom/Miscellaneous permissions";
-    miscPermissionGroup.appsCount = 0;
-    //applicationInfos.clear();
-    //try {
-    //  applicationInfos.add(packageManager.getPackageInfo("com.indihood.auth", PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS));
-    //} catch (PackageManager.NameNotFoundException e) {
-    //  e.printStackTrace();
-    //}
-    permissionGroupDetailsMap.put("MISC", miscPermissionGroup);
-    for (PackageInfo packageInfo : applicationInfos) {
+    addMiscCategory(permissionGroupDetailsMap);
+    addNoPermissionCategroy(permissionGroupDetailsMap);
+    for (ResolveInfo applicationInfo : applicationInfos) {
       try {
-
+        PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.activityInfo.packageName, PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
         String[] requestedPermissions = packageInfo.requestedPermissions;
         if (requestedPermissions != null) {
           for (String permission : requestedPermissions) {
@@ -127,6 +123,11 @@ public class PermissionListFragment extends Fragment {
               permissionGroupDetailsMap.put(permissionInfo.group, permissionGroupDetails);
             }
           }
+        } else {
+          PermissionGroupDetails groupDetails = permissionGroupDetailsMap.get("NO_PERMISSION");
+          if (groupDetails.appPackages.add(packageInfo.packageName)) {
+            groupDetails.appsCount++;
+          }
         }
       } catch (Exception e) {
         e.printStackTrace();
@@ -134,5 +135,22 @@ public class PermissionListFragment extends Fragment {
     }
     Log.i("Map size ", permissionGroupDetailsMap.size() + " ");
     return permissionGroupDetailsMap;
+  }
+
+  private void addNoPermissionCategroy(
+      Map<String, PermissionGroupDetails> permissionGroupDetailsMap) {
+    PermissionGroupDetails miscPermissionGroup = new PermissionGroupDetails();
+    miscPermissionGroup.permissionGroupDes = "App don't need any permission";
+    miscPermissionGroup.permissionGroupName = "NO PERMISSIONS REQUIRED";
+    miscPermissionGroup.appsCount = 0;
+    permissionGroupDetailsMap.put("NO_PERMISSION", miscPermissionGroup);
+  }
+
+  private void addMiscCategory(Map<String, PermissionGroupDetails> permissionGroupDetailsMap) {
+    PermissionGroupDetails miscPermissionGroup = new PermissionGroupDetails();
+    miscPermissionGroup.permissionGroupDes = "Custom/Miscellaneous permissions";
+    miscPermissionGroup.permissionGroupName = "MISC PERMISSION";
+    miscPermissionGroup.appsCount = 0;
+    permissionGroupDetailsMap.put("MISC", miscPermissionGroup);
   }
 }

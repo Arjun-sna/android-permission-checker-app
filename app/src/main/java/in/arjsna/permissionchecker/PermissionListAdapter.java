@@ -38,7 +38,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<PermissionListAd
       permissionHeader = permissionSplit[permissionSplit.length - 1].replace("_", " ");
     }
     holder.permissionName.setText(permissionHeader);
-    holder.permissionDes.setText(list.get(position).permissionGroupName);
+    holder.permissionDes.setText(list.get(position).permissionGroupDes);
     holder.appsCount.setText(String.valueOf(list.get(position).appsCount));
     holder.itemView.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
