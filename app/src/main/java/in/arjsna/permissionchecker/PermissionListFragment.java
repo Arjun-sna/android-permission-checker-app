@@ -40,7 +40,7 @@ public class PermissionListFragment extends Fragment {
   private View mRootView;
   private PermissionGroupListAdapter permissionGroupListAdapter;
   private RecyclerView permissionsList;
-  private ArrayList<PermissionGroupDetails>  permissionList;
+  private ArrayList<PermissionGroupDetails> permissionList;
 
   public PermissionListFragment() {
     setHasOptionsMenu(true);
@@ -79,7 +79,8 @@ public class PermissionListFragment extends Fragment {
 
           }
 
-          @Override public void onSuccess(@NonNull ArrayList<PermissionGroupDetails> groupDetailsList) {
+          @Override
+          public void onSuccess(@NonNull ArrayList<PermissionGroupDetails> groupDetailsList) {
             Log.i("Single subscriber test ", groupDetailsList.size() + " ");
             permissionList = groupDetailsList;
             permissionGroupListAdapter.addAll(groupDetailsList);
@@ -102,11 +103,14 @@ public class PermissionListFragment extends Fragment {
     addNoPermissionCategroy(permissionGroupDetailsMap);
     for (ResolveInfo applicationInfo : applicationInfos) {
       try {
-        PackageInfo packageInfo = packageManager.getPackageInfo(applicationInfo.activityInfo.packageName, PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
+        PackageInfo packageInfo =
+            packageManager.getPackageInfo(applicationInfo.activityInfo.packageName,
+                PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
         String[] requestedPermissions = packageInfo.requestedPermissions;
         if (requestedPermissions != null) {
           for (String permission : requestedPermissions) {
-            PermissionInfo permissionInfo = packageManager.getPermissionInfo(permission, PackageManager.GET_META_DATA);
+            PermissionInfo permissionInfo =
+                packageManager.getPermissionInfo(permission, PackageManager.GET_META_DATA);
             if (permissionInfo.group == null) {
               PermissionGroupDetails groupDetails = permissionGroupDetailsMap.get("MISC");
               if (groupDetails.appPackages.add(packageInfo.packageName)) {
@@ -168,7 +172,8 @@ public class PermissionListFragment extends Fragment {
     TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
     titleTextView.setText("Permission Groups");
     toolbar.setTitle("");
-    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -183,8 +188,9 @@ public class PermissionListFragment extends Fragment {
             .replace(R.id.permission_container, new AppListFragment())
             .addToBackStack("App apps")
             .commit();
-        default:
-          return super.onOptionsItemSelected(item);
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
     }
   }
 }

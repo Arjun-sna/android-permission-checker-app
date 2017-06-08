@@ -1,12 +1,8 @@
 package in.arjsna.permissionchecker;
 
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import java.util.List;
+import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +13,16 @@ public class MainActivity extends AppCompatActivity {
       getSupportFragmentManager().beginTransaction()
           .add(R.id.permission_container, new PermissionListFragment())
           .commit();
+    }
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        onBackPressed();
+        return true;
+      default:
+        return super.onOptionsItemSelected(item);
     }
   }
 }

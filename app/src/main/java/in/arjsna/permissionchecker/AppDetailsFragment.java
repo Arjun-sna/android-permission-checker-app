@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -99,6 +101,9 @@ public class AppDetailsFragment extends Fragment {
     Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
     TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
     titleTextView.setText("App Details");
+    ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    supportActionBar.setDisplayHomeAsUpEnabled(true);
+    supportActionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white);
   }
 
 }

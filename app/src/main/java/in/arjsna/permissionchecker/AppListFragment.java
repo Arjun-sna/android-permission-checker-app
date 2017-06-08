@@ -4,14 +4,16 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -41,14 +43,14 @@ public class AppListFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_app_list, container, false);
-    setUpToolBar();
-    mAppListView = (RecyclerView)mRootView.findViewById(R.id.app_list);
+    mAppListView = (RecyclerView) mRootView.findViewById(R.id.app_list);
     mAppListView.setLayoutManager(new GridLayoutManager(getContext(), 4));
     appListAdapter = new AppListAdapter(getActivity());
     mAppListView.setAdapter(appListAdapter);
     if (getArguments() != null) {
       packages = getArguments().getStringArrayList("packages");
     }
+    setUpToolBar();
     getAppDetails();
     return mRootView;
   }
@@ -99,7 +101,8 @@ public class AppListFragment extends Fragment {
     PackageManager packageManager = getActivity().getPackageManager();
     AppDetails appDetails = new AppDetails();
     try {
-      ApplicationInfo applicationInfo = packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+      ApplicationInfo applicationInfo =
+          packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
       appDetails.name = applicationInfo.loadLabel(packageManager).toString();
       appDetails.icon = packageManager.getApplicationIcon(packageName);
       appDetails.packageName = packageName;
@@ -112,6 +115,9 @@ public class AppListFragment extends Fragment {
   private void setUpToolBar() {
     Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
     TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
-    titleTextView.setText("App List");
+    titleTextView.setText(packages == null ? "All Installed Apps" : "App List");
+    ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    supportActionBar.setDisplayHomeAsUpEnabled(true);
+    supportActionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white);
   }
 }
