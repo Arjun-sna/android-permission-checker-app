@@ -8,11 +8,15 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -37,6 +41,10 @@ public class PermissionListFragment extends Fragment {
   private PermissionGroupListAdapter permissionGroupListAdapter;
   private RecyclerView permissionsList;
   private ArrayList<PermissionGroupDetails>  permissionList;
+
+  public PermissionListFragment() {
+    setHasOptionsMenu(true);
+  }
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -159,5 +167,24 @@ public class PermissionListFragment extends Fragment {
     Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
     TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
     titleTextView.setText("Permission Groups");
+    toolbar.setTitle("");
+    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.permissionlist_menu, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.listby:
+        getActivity().getSupportFragmentManager()
+            .beginTransaction()
+            .replace(R.id.permission_container, new AppListFragment())
+            .addToBackStack("App apps")
+            .commit();
+        default:
+          return super.onOptionsItemSelected(item);
+    }
   }
 }

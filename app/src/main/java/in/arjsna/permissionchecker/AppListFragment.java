@@ -1,7 +1,9 @@
 package in.arjsna.permissionchecker;
 
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -44,7 +46,9 @@ public class AppListFragment extends Fragment {
     mAppListView.setLayoutManager(new GridLayoutManager(getContext(), 4));
     appListAdapter = new AppListAdapter(getActivity());
     mAppListView.setAdapter(appListAdapter);
-    packages = getArguments().getStringArrayList("packages");
+    if (getArguments() != null) {
+      packages = getArguments().getStringArrayList("packages");
+    }
     getAppDetails();
     return mRootView;
   }
@@ -54,9 +58,21 @@ public class AppListFragment extends Fragment {
       @Override public List<AppDetails> call() throws Exception {
         if (appDetailList == null) {
           appDetailList = new ArrayList<>();
-          for (String packageName : packages) {
-            AppDetails appDetails = fetchDetail(packageName);
-            appDetailList.add(appDetails);
+          if (packages == null) {
+            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+            PackageManager packageManager = getActivity().getPackageManager();
+            List<ResolveInfo> applicationInfos =
+                packageManager.queryIntentActivities(mainIntent, PackageManager.GET_META_DATA);
+            for (ResolveInfo resolveInfo : applicationInfos) {
+              AppDetails appDetails = fetchDetail(resolveInfo.activityInfo.packageName);
+              appDetailList.add(appDetails);
+            }
+          } else {
+            for (String packageName : packages) {
+              AppDetails appDetails = fetchDetail(packageName);
+              appDetailList.add(appDetails);
+            }
           }
         }
         return appDetailList;
