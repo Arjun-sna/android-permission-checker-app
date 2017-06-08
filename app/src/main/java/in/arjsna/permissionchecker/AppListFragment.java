@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
@@ -38,11 +39,13 @@ public class AppListFragment extends Fragment {
   private RecyclerView mAppListView;
   private AppListAdapter appListAdapter;
   private List<AppDetails> appDetailList;
+  private ProgressBar pb;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_app_list, container, false);
+    pb = (ProgressBar) mRootView.findViewById(R.id.app_list_progress_bar);
     mAppListView = (RecyclerView) mRootView.findViewById(R.id.app_list);
     mAppListView.setLayoutManager(new GridLayoutManager(getContext(), 4));
     appListAdapter = new AppListAdapter(getActivity());
@@ -84,10 +87,13 @@ public class AppListFragment extends Fragment {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new SingleObserver<List<AppDetails>>() {
           @Override public void onSubscribe(@NonNull Disposable d) {
-
+            pb.setVisibility(View.VISIBLE);
+            mAppListView.setVisibility(View.GONE);
           }
 
           @Override public void onSuccess(@NonNull List<AppDetails> appDetails) {
+            pb.setVisibility(View.GONE);
+            mAppListView.setVisibility(View.VISIBLE);
             appListAdapter.addAllAndNotify(appDetails);
           }
 

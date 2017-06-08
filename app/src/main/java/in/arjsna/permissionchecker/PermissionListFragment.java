@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
@@ -27,9 +28,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
@@ -42,6 +41,7 @@ public class PermissionListFragment extends Fragment {
   private PermissionGroupListAdapter permissionGroupListAdapter;
   private RecyclerView permissionsList;
   private ArrayList<PermissionGroupDetails> permissionList;
+  private ProgressBar pb;
 
   public PermissionListFragment() {
     setHasOptionsMenu(true);
@@ -52,6 +52,7 @@ public class PermissionListFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_permission_list, container, false);
     setUpToolBar();
+    pb = (ProgressBar) mRootView.findViewById(R.id.permission_list_progress_bar);
     permissionsList = (RecyclerView) mRootView.findViewById(R.id.permission_list);
     permissionGroupListAdapter = new PermissionGroupListAdapter(getContext());
     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -77,12 +78,15 @@ public class PermissionListFragment extends Fragment {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new SingleObserver<ArrayList<PermissionGroupDetails>>() {
           @Override public void onSubscribe(@NonNull Disposable d) {
-
+            pb.setVisibility(View.VISIBLE);
+            permissionsList.setVisibility(View.GONE);
           }
 
           @Override
           public void onSuccess(@NonNull ArrayList<PermissionGroupDetails> groupDetailsList) {
             Log.i("Single subscriber test ", groupDetailsList.size() + " ");
+            pb.setVisibility(View.GONE);
+            permissionsList.setVisibility(View.VISIBLE);
             permissionList = groupDetailsList;
             permissionGroupListAdapter.addAll(groupDetailsList);
           }
