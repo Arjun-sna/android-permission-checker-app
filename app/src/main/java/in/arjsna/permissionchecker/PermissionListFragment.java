@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 
 /**
@@ -68,7 +69,7 @@ public class PermissionListFragment extends Fragment {
     Single<ArrayList<PermissionGroupDetails>> permissions =
         Single.fromCallable(new Callable<ArrayList<PermissionGroupDetails>>() {
           @Override public ArrayList<PermissionGroupDetails> call() throws Exception {
-            Map<String, PermissionGroupDetails> groups = fetchPermList();
+            TreeMap<String, PermissionGroupDetails> groups = fetchPermList();
             return new ArrayList<>(groups.values());
           }
         });
@@ -92,13 +93,13 @@ public class PermissionListFragment extends Fragment {
         });
   }
 
-  private Map<String, PermissionGroupDetails> fetchPermList() {
+  private TreeMap<String, PermissionGroupDetails> fetchPermList() {
     PackageManager packageManager = getActivity().getPackageManager();
     Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
     mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
     List<ResolveInfo> applicationInfos =
         packageManager.queryIntentActivities(mainIntent, PackageManager.GET_META_DATA);
-    Map<String, PermissionGroupDetails> permissionGroupDetailsMap = new HashMap<>();
+    TreeMap<String, PermissionGroupDetails> permissionGroupDetailsMap = new TreeMap<>();
     addMiscCategory(permissionGroupDetailsMap);
     addNoPermissionCategroy(permissionGroupDetailsMap);
     for (ResolveInfo applicationInfo : applicationInfos) {
@@ -112,7 +113,7 @@ public class PermissionListFragment extends Fragment {
             PermissionInfo permissionInfo =
                 packageManager.getPermissionInfo(permission, PackageManager.GET_META_DATA);
             if (permissionInfo.group == null) {
-              PermissionGroupDetails groupDetails = permissionGroupDetailsMap.get("MISC");
+              PermissionGroupDetails groupDetails = permissionGroupDetailsMap.get("z_MISC");
               if (groupDetails.appPackages.add(packageInfo.packageName)) {
                 groupDetails.appsCount++;
               }
@@ -137,7 +138,7 @@ public class PermissionListFragment extends Fragment {
             }
           }
         } else {
-          PermissionGroupDetails groupDetails = permissionGroupDetailsMap.get("NO_PERMISSION");
+          PermissionGroupDetails groupDetails = permissionGroupDetailsMap.get("z_NO_PERMISSION");
           if (groupDetails.appPackages.add(packageInfo.packageName)) {
             groupDetails.appsCount++;
           }
@@ -151,20 +152,20 @@ public class PermissionListFragment extends Fragment {
   }
 
   private void addNoPermissionCategroy(
-      Map<String, PermissionGroupDetails> permissionGroupDetailsMap) {
+      TreeMap<String, PermissionGroupDetails> permissionGroupDetailsMap) {
     PermissionGroupDetails miscPermissionGroup = new PermissionGroupDetails();
     miscPermissionGroup.permissionGroupDes = "App don't need any permission";
     miscPermissionGroup.permissionGroupName = "NO PERMISSIONS REQUIRED";
     miscPermissionGroup.appsCount = 0;
-    permissionGroupDetailsMap.put("NO_PERMISSION", miscPermissionGroup);
+    permissionGroupDetailsMap.put("z_NO_PERMISSION", miscPermissionGroup);
   }
 
-  private void addMiscCategory(Map<String, PermissionGroupDetails> permissionGroupDetailsMap) {
+  private void addMiscCategory(TreeMap<String, PermissionGroupDetails> permissionGroupDetailsMap) {
     PermissionGroupDetails miscPermissionGroup = new PermissionGroupDetails();
     miscPermissionGroup.permissionGroupDes = "Custom/Miscellaneous permissions";
     miscPermissionGroup.permissionGroupName = "MISC PERMISSION";
     miscPermissionGroup.appsCount = 0;
-    permissionGroupDetailsMap.put("MISC", miscPermissionGroup);
+    permissionGroupDetailsMap.put("z_MISC", miscPermissionGroup);
   }
 
   private void setUpToolBar() {
