@@ -1,4 +1,4 @@
 <resources>
-  <string name="app_name">PermissionChecker</string>
+  <string name="app_name">Android Permissions</string>
   <string name="permission_count">%1$d Permissions required</string>
 </resources>
