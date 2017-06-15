@@ -65,13 +65,13 @@
           android:textColor="@color/white"
           app:layout_constraintTop_toBottomOf="@+id/app_picture"
           app:layout_constraintLeft_toLeftOf="parent"
-          app:layout_constraintRight_toLeftOf="@+id/uninstall_app"
+          app:layout_constraintRight_toLeftOf="@+id/app_details"
           />
       <Button
-          android:id="@+id/uninstall_app"
+          android:id="@+id/app_details"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:text="@string/uninstall_app"
+          android:text="@string/settings"
           android:background="@drawable/green_btn_bg"
           android:textColor="@color/white"
           android:layout_marginTop="10dp"
