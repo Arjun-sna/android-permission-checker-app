@@ -31,7 +31,6 @@
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toLeftOf="@+id/app_name"
           app:layout_constraintTop_toTopOf="parent"
-          app:layout_constraintBottom_toBottomOf="parent"
           />
       <TextView
           android:id="@+id/app_name"
@@ -54,6 +53,32 @@
           app:layout_constraintBottom_toBottomOf="@+id/app_picture"
           app:layout_constraintLeft_toLeftOf="@+id/app_name"
           app:layout_constraintTop_toBottomOf="@+id/app_name"
+          />
+      <Button
+          android:id="@+id/open_app"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:text="@string/open_app"
+          android:layout_marginTop="10dp"
+          android:layout_marginRight="5dp"
+          android:background="@drawable/green_btn_bg"
+          android:textColor="@color/white"
+          app:layout_constraintTop_toBottomOf="@+id/app_picture"
+          app:layout_constraintLeft_toLeftOf="parent"
+          app:layout_constraintRight_toLeftOf="@+id/uninstall_app"
+          />
+      <Button
+          android:id="@+id/uninstall_app"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:text="@string/uninstall_app"
+          android:background="@drawable/green_btn_bg"
+          android:textColor="@color/white"
+          android:layout_marginTop="10dp"
+          android:padding="0dp"
+          app:layout_constraintTop_toBottomOf="@+id/app_picture"
+          app:layout_constraintLeft_toRightOf="@+id/open_app"
+          app:layout_constraintRight_toRightOf="parent"
           />
     </android.support.constraint.ConstraintLayout>
   </android.support.v7.widget.CardView>
