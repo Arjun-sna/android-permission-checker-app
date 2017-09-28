@@ -34,18 +34,16 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
     final AppDetails appDetails = item.get(position);
     holder.appIcon.setImageDrawable(appDetails.icon);
     holder.appName.setText(appDetails.name);
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Bundle bundle = new Bundle();
-        bundle.putString("package_name", appDetails.packageName);
-        AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
-        appDetailsFragment.setArguments(bundle);
-        ((AppCompatActivity)context).getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.permission_container, appDetailsFragment)
-            .addToBackStack("appdetail")
-            .commit();
-      }
+    holder.itemView.setOnClickListener(v -> {
+      Bundle bundle = new Bundle();
+      bundle.putString("package_name", appDetails.packageName);
+      AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
+      appDetailsFragment.setArguments(bundle);
+      ((AppCompatActivity)context).getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.permission_container, appDetailsFragment)
+          .addToBackStack("appdetail")
+          .commit();
     });
   }
 

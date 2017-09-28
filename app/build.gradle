@@ -1,16 +1,22 @@
 apply plugin: 'com.android.application'
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.2"
+  compileSdkVersion 26
+  buildToolsVersion "26.0.1"
   defaultConfig {
     applicationId "in.arjsna.permissionchecker"
     minSdkVersion 15
-    targetSdkVersion 25
+    targetSdkVersion 26
     versionCode 2
     versionName "1.2"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
   buildTypes {
     release {
       minifyEnabled true
@@ -20,7 +26,7 @@ android {
 }
 
 ext {
-  supportLibraryVerion = "25.3.1"
+  supportLibraryVerion = "26.1.0"
   constraintLayoutVersion = "1.0.2"
   rxAndroidVersion = "2.0.1"
   rxJavaVersion = "2.1.0"

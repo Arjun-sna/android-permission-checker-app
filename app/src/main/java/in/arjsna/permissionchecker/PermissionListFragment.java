@@ -68,11 +68,9 @@ public class PermissionListFragment extends Fragment {
 
   private void makeRx() {
     Single<ArrayList<PermissionGroupDetails>> permissions =
-        Single.fromCallable(new Callable<ArrayList<PermissionGroupDetails>>() {
-          @Override public ArrayList<PermissionGroupDetails> call() throws Exception {
-            TreeMap<String, PermissionGroupDetails> groups = fetchPermList();
-            return new ArrayList<>(groups.values());
-          }
+        Single.fromCallable(() -> {
+          TreeMap<String, PermissionGroupDetails> groups = fetchPermList();
+          return new ArrayList<>(groups.values());
         });
     permissions.subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())

@@ -42,19 +42,17 @@ public class PermissionGroupListAdapter
     setDrawable(holder, ResourceMap.resourceMap.get(permissionHeader));
     holder.permissionDes.setText(list.get(position).permissionGroupDes);
     holder.appsCount.setText(String.valueOf(list.get(position).appsCount));
-    holder.itemView.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Bundle bundle = new Bundle();
-        bundle.putStringArrayList("packages",
-            new ArrayList<>(list.get(holder.getAdapterPosition()).appPackages));
-        AppListFragment appListFragment = new AppListFragment();
-        appListFragment.setArguments(bundle);
-        ((AppCompatActivity) context).getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.permission_container, appListFragment)
-            .addToBackStack("Permission Details")
-            .commit();
-      }
+    holder.itemView.setOnClickListener(v -> {
+      Bundle bundle = new Bundle();
+      bundle.putStringArrayList("packages",
+          new ArrayList<>(list.get(holder.getAdapterPosition()).appPackages));
+      AppListFragment appListFragment = new AppListFragment();
+      appListFragment.setArguments(bundle);
+      ((AppCompatActivity) context).getSupportFragmentManager()
+          .beginTransaction()
+          .replace(R.id.permission_container, appListFragment)
+          .addToBackStack("Permission Details")
+          .commit();
     });
   }
 

@@ -58,21 +58,17 @@ public class AppDetailsFragment extends Fragment {
   }
 
   private void bindEvents() {
-    openAppBtn.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Intent openAppIntent =
-            getActivity().getPackageManager().getLaunchIntentForPackage(mPackageName);
-        startActivity(openAppIntent);
-      }
+    openAppBtn.setOnClickListener(v -> {
+      Intent openAppIntent =
+          getActivity().getPackageManager().getLaunchIntentForPackage(mPackageName);
+      startActivity(openAppIntent);
     });
-    appDetails.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", mPackageName, null);
-        intent.setData(uri);
-        startActivity(intent);
-      }
+    appDetails.setOnClickListener(v -> {
+      Intent intent = new Intent();
+      intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+      Uri uri = Uri.fromParts("package", mPackageName, null);
+      intent.setData(uri);
+      startActivity(intent);
     });
   }
 
@@ -90,21 +86,19 @@ public class AppDetailsFragment extends Fragment {
   }
 
   private void fetchDetails(final String packageName) {
-    Single<AppDetails> appDetailsSingle = Single.fromCallable(new Callable<AppDetails>() {
-      @Override public AppDetails call() throws Exception {
-        AppDetails appDetails = new AppDetails();
-        PackageManager packageManager = getActivity().getPackageManager();
-        PackageInfo packageInfo = packageManager.getPackageInfo(packageName,
-            PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
-        appDetails.name = packageInfo.applicationInfo.loadLabel(packageManager).toString();
-        appDetails.icon = packageInfo.applicationInfo.loadIcon(packageManager);
-        appDetails.packageName = packageName;
-        if (packageInfo.requestedPermissions != null) {
-          appDetails.permissionList =
-              new ArrayList<>(Arrays.asList(packageInfo.requestedPermissions));
-        }
-        return appDetails;
+    Single<AppDetails> appDetailsSingle = Single.fromCallable(() -> {
+      AppDetails appDetails = new AppDetails();
+      PackageManager packageManager = getActivity().getPackageManager();
+      PackageInfo packageInfo = packageManager.getPackageInfo(packageName,
+          PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
+      appDetails.name = packageInfo.applicationInfo.loadLabel(packageManager).toString();
+      appDetails.icon = packageInfo.applicationInfo.loadIcon(packageManager);
+      appDetails.packageName = packageName;
+      if (packageInfo.requestedPermissions != null) {
+        appDetails.permissionList =
+            new ArrayList<>(Arrays.asList(packageInfo.requestedPermissions));
       }
+      return appDetails;
     });
     appDetailsSingle.subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())

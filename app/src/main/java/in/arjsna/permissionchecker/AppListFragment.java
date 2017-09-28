@@ -13,7 +13,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -59,29 +58,27 @@ public class AppListFragment extends Fragment {
   }
 
   private void getAppDetails() {
-    Single<List<AppDetails>> listSingle = Single.fromCallable(new Callable<List<AppDetails>>() {
-      @Override public List<AppDetails> call() throws Exception {
-        if (appDetailList == null) {
-          appDetailList = new ArrayList<>();
-          if (packages == null) {
-            Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-            mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-            PackageManager packageManager = getActivity().getPackageManager();
-            List<ResolveInfo> applicationInfos =
-                packageManager.queryIntentActivities(mainIntent, PackageManager.GET_META_DATA);
-            for (ResolveInfo resolveInfo : applicationInfos) {
-              AppDetails appDetails = fetchDetail(resolveInfo.activityInfo.packageName);
-              appDetailList.add(appDetails);
-            }
-          } else {
-            for (String packageName : packages) {
-              AppDetails appDetails = fetchDetail(packageName);
-              appDetailList.add(appDetails);
-            }
+    Single<List<AppDetails>> listSingle = Single.fromCallable(() -> {
+      if (appDetailList == null) {
+        appDetailList = new ArrayList<>();
+        if (packages == null) {
+          Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+          mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+          PackageManager packageManager = getActivity().getPackageManager();
+          List<ResolveInfo> applicationInfos =
+              packageManager.queryIntentActivities(mainIntent, PackageManager.GET_META_DATA);
+          for (ResolveInfo resolveInfo : applicationInfos) {
+            AppDetails appDetails = fetchDetail(resolveInfo.activityInfo.packageName);
+            appDetailList.add(appDetails);
+          }
+        } else {
+          for (String packageName : packages) {
+            AppDetails appDetails = fetchDetail(packageName);
+            appDetailList.add(appDetails);
           }
         }
-        return appDetailList;
       }
+      return appDetailList;
     });
     listSingle.subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
