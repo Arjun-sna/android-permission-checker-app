@@ -30,7 +30,6 @@ import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
-import java.util.concurrent.Callable;
 
 /**
  * Created by arjun on 3/6/17.
@@ -52,8 +51,8 @@ public class PermissionListFragment extends Fragment {
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_permission_list, container, false);
     setUpToolBar();
-    pb = (ProgressBar) mRootView.findViewById(R.id.permission_list_progress_bar);
-    permissionsList = (RecyclerView) mRootView.findViewById(R.id.permission_list);
+    pb = mRootView.findViewById(R.id.permission_list_progress_bar);
+    permissionsList = mRootView.findViewById(R.id.permission_list);
     permissionGroupListAdapter = new PermissionGroupListAdapter(getContext());
     LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
     permissionsList.setLayoutManager(layoutManager);
@@ -67,11 +66,10 @@ public class PermissionListFragment extends Fragment {
   }
 
   private void makeRx() {
-    Single<ArrayList<PermissionGroupDetails>> permissions =
-        Single.fromCallable(() -> {
-          TreeMap<String, PermissionGroupDetails> groups = fetchPermList();
-          return new ArrayList<>(groups.values());
-        });
+    Single<ArrayList<PermissionGroupDetails>> permissions = Single.fromCallable(() -> {
+      TreeMap<String, PermissionGroupDetails> groups = fetchPermList();
+      return new ArrayList<>(groups.values());
+    });
     permissions.subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new SingleObserver<ArrayList<PermissionGroupDetails>>() {
@@ -171,8 +169,8 @@ public class PermissionListFragment extends Fragment {
   }
 
   private void setUpToolBar() {
-    Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-    TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+    Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+    TextView titleTextView = toolbar.findViewById(R.id.toolbar_title);
     titleTextView.setText("Permission Groups");
     toolbar.setTitle("");
     ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
@@ -188,6 +186,8 @@ public class PermissionListFragment extends Fragment {
       case R.id.listby:
         getActivity().getSupportFragmentManager()
             .beginTransaction()
+            .setCustomAnimations(R.anim.slide_in_right, R.anim.zoom_out, R.anim.zoom_in,
+                R.anim.slide_out_right)
             .replace(R.id.permission_container, new AppListFragment())
             .addToBackStack("App apps")
             .commit();

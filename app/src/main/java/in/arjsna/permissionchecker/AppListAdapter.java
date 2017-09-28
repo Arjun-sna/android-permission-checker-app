@@ -41,6 +41,8 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
       appDetailsFragment.setArguments(bundle);
       ((AppCompatActivity)context).getSupportFragmentManager()
           .beginTransaction()
+          .setCustomAnimations(R.anim.slide_in_right, R.anim.zoom_out, R.anim.zoom_in,
+              R.anim.slide_out_right)
           .replace(R.id.permission_container, appDetailsFragment)
           .addToBackStack("appdetail")
           .commit();

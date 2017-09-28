@@ -44,8 +44,8 @@ public class AppListFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_app_list, container, false);
-    pb = (ProgressBar) mRootView.findViewById(R.id.app_list_progress_bar);
-    mAppListView = (RecyclerView) mRootView.findViewById(R.id.app_list);
+    pb = mRootView.findViewById(R.id.app_list_progress_bar);
+    mAppListView = mRootView.findViewById(R.id.app_list);
     mAppListView.setLayoutManager(new GridLayoutManager(getContext(), 4));
     appListAdapter = new AppListAdapter(getActivity());
     mAppListView.setAdapter(appListAdapter);
@@ -116,8 +116,8 @@ public class AppListFragment extends Fragment {
   }
 
   private void setUpToolBar() {
-    Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-    TextView titleTextView = (TextView) toolbar.findViewById(R.id.toolbar_title);
+    Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+    TextView titleTextView = toolbar.findViewById(R.id.toolbar_title);
     titleTextView.setText(packages == null ? "All Installed Apps" : "App List");
     ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     supportActionBar.setDisplayHomeAsUpEnabled(true);
