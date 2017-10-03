@@ -138,8 +138,10 @@ public class AppDetailsFragment extends Fragment {
 
   private void setUpToolBar() {
     Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+    toolbar.setTitle("");
     TextView titleTextView = toolbar.findViewById(R.id.toolbar_title);
     titleTextView.setText("App Details");
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     supportActionBar.setDisplayHomeAsUpEnabled(true);
     supportActionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white);

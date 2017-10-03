@@ -44,6 +44,7 @@ public class PermissionListFragment extends Fragment {
 
   public PermissionListFragment() {
     setHasOptionsMenu(true);
+    setRetainInstance(true);
   }
 
   @Nullable @Override
