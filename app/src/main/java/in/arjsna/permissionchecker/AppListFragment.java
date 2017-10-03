@@ -40,6 +40,11 @@ public class AppListFragment extends Fragment {
   private List<AppDetails> appDetailList;
   private ProgressBar pb;
 
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setRetainInstance(true);
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -53,7 +58,12 @@ public class AppListFragment extends Fragment {
       packages = getArguments().getStringArrayList("packages");
     }
     setUpToolBar();
-    getAppDetails();
+    if (appDetailList == null) {
+      getAppDetails();
+    } else {
+      mAppListView.setVisibility(View.VISIBLE);
+      appListAdapter.addAllAndNotify(appDetailList);
+    }
     return mRootView;
   }
 
@@ -117,8 +127,10 @@ public class AppListFragment extends Fragment {
 
   private void setUpToolBar() {
     Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
+    toolbar.setTitle("");
     TextView titleTextView = toolbar.findViewById(R.id.toolbar_title);
     titleTextView.setText(packages == null ? "All Installed Apps" : "App List");
+    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
     ActionBar supportActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
     supportActionBar.setDisplayHomeAsUpEnabled(true);
     supportActionBar.setHomeAsUpIndicator(R.drawable.ic_arrow_back_white);
