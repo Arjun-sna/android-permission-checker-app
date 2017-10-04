@@ -140,29 +140,32 @@ public class AppDetailsFragment extends Fragment {
               noPermissionLabel.setText(
                   getString(R.string.permission_count, appDetails.grantedPermissionList.size()));
               ArrayList<PermissionDetail> permissionDetails = new ArrayList<>();
-              PermissionDetail section1 = new PermissionDetail();
-              section1.viewType = PermissionDetail.VIEW_TYPE_SECTION;
-              section1.sectionName = "Granted Permissions";
-              permissionDetails.add(section1);
-              for (String perm : appDetails.grantedPermissionList) {
-                PermissionDetail permissionDetail = new PermissionDetail();
-                permissionDetail.permissionName = perm;
-                permissionDetail.isGranted = true;
-                permissionDetail.viewType = PermissionDetail.VIEW_TYPE_ITEM;
-                permissionDetails.add(permissionDetail);
+              if (appDetails.grantedPermissionList.size() > 0) {
+                PermissionDetail section1 = new PermissionDetail();
+                section1.viewType = PermissionDetail.VIEW_TYPE_SECTION;
+                section1.sectionName = "Granted Permissions";
+                permissionDetails.add(section1);
+                for (String perm : appDetails.grantedPermissionList) {
+                  PermissionDetail permissionDetail = new PermissionDetail();
+                  permissionDetail.permissionName = perm.replace("android.permission.", "");
+                  permissionDetail.isGranted = true;
+                  permissionDetail.viewType = PermissionDetail.VIEW_TYPE_ITEM;
+                  permissionDetails.add(permissionDetail);
+                }
               }
-              PermissionDetail section2 = new PermissionDetail();
-              section2.viewType = PermissionDetail.VIEW_TYPE_SECTION;
-              section2.sectionName = "Denied Permissions";
-              permissionDetails.add(section2);
-              for (String perm : appDetails.deniedPermissionList) {
-                PermissionDetail permissionDetail = new PermissionDetail();
-                permissionDetail.permissionName = perm;
-                permissionDetail.isGranted = false;
-                permissionDetail.viewType = PermissionDetail.VIEW_TYPE_ITEM;
-                permissionDetails.add(permissionDetail);
+              if (appDetails.deniedPermissionList.size() > 0) {
+                PermissionDetail section2 = new PermissionDetail();
+                section2.viewType = PermissionDetail.VIEW_TYPE_SECTION;
+                section2.sectionName = "Denied Permissions";
+                permissionDetails.add(section2);
+                for (String perm : appDetails.deniedPermissionList) {
+                  PermissionDetail permissionDetail = new PermissionDetail();
+                  permissionDetail.permissionName = perm.replace("android.permission.", "");
+                  permissionDetail.isGranted = false;
+                  permissionDetail.viewType = PermissionDetail.VIEW_TYPE_ITEM;
+                  permissionDetails.add(permissionDetail);
+                }
               }
-
               permissionListAdapter.addAllAndNotify(permissionDetails);
             }
           }
