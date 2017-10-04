@@ -34,7 +34,6 @@ import java.util.concurrent.Callable;
 public class AppListFragment extends Fragment {
   private View mRootView;
   private ArrayList<String> packages;
-  private ArrayList<AppDetails> applications;
   private RecyclerView mAppListView;
   private AppListAdapter appListAdapter;
   private List<AppDetails> appDetailList;

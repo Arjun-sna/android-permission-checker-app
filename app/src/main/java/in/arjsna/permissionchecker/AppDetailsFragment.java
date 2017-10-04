@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -105,8 +106,19 @@ public class AppDetailsFragment extends Fragment {
       appDetails.icon = packageInfo.applicationInfo.loadIcon(packageManager);
       appDetails.packageName = packageName;
       if (packageInfo.requestedPermissions != null) {
-        appDetails.permissionList =
-            new ArrayList<>(Arrays.asList(packageInfo.requestedPermissions));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          for (int index = 0; index < packageInfo.requestedPermissions.length; index++) {
+            if ((packageInfo.requestedPermissionsFlags[index]
+                & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+              appDetails.grantedPermissionList.add(packageInfo.requestedPermissions[index]);
+            } else {
+              appDetails.deniedPermissionList.add(packageInfo.requestedPermissions[index]);
+            }
+          }
+        } else {
+          appDetails.grantedPermissionList =
+              new ArrayList<>(Arrays.asList(packageInfo.requestedPermissions));
+        }
       }
       return appDetails;
     });
@@ -121,12 +133,37 @@ public class AppDetailsFragment extends Fragment {
             appIcon.setImageDrawable(appDetails.icon);
             appName.setText(appDetails.name);
             packageNameTv.setText(appDetails.packageName);
-            if (appDetails.permissionList == null) {
+            if (appDetails.grantedPermissionList.size() == 0
+                && appDetails.deniedPermissionList.size() == 0) {
               noPermissionLabel.setText("No permissions required");
             } else {
               noPermissionLabel.setText(
-                  getString(R.string.permission_count, appDetails.permissionList.size()));
-              permissionListAdapter.addAllAndNotify(appDetails.permissionList);
+                  getString(R.string.permission_count, appDetails.grantedPermissionList.size()));
+              ArrayList<PermissionDetail> permissionDetails = new ArrayList<>();
+              PermissionDetail section1 = new PermissionDetail();
+              section1.viewType = PermissionDetail.VIEW_TYPE_SECTION;
+              section1.sectionName = "Granted Permissions";
+              permissionDetails.add(section1);
+              for (String perm : appDetails.grantedPermissionList) {
+                PermissionDetail permissionDetail = new PermissionDetail();
+                permissionDetail.permissionName = perm;
+                permissionDetail.isGranted = true;
+                permissionDetail.viewType = PermissionDetail.VIEW_TYPE_ITEM;
+                permissionDetails.add(permissionDetail);
+              }
+              PermissionDetail section2 = new PermissionDetail();
+              section2.viewType = PermissionDetail.VIEW_TYPE_SECTION;
+              section2.sectionName = "Denied Permissions";
+              permissionDetails.add(section2);
+              for (String perm : appDetails.deniedPermissionList) {
+                PermissionDetail permissionDetail = new PermissionDetail();
+                permissionDetail.permissionName = perm;
+                permissionDetail.isGranted = false;
+                permissionDetail.viewType = PermissionDetail.VIEW_TYPE_ITEM;
+                permissionDetails.add(permissionDetail);
+              }
+
+              permissionListAdapter.addAllAndNotify(permissionDetails);
             }
           }
 
