@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import in.arjsna.permissionchecker.AppDetailsFragment;
+import in.arjsna.permissionchecker.appdetails.AppDetailsFragment;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
 import in.arjsna.permissionchecker.models.AppDetails;

@@ -1,13 +1,13 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.appdetails;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.models.PermissionDetail;
-import java.util.ArrayList;
+import javax.inject.Inject;
 
 /**
  * Created by arjun on 7/6/17.
@@ -15,10 +15,12 @@ import java.util.ArrayList;
 
 public class PermissionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private final LayoutInflater layoutInflater;
-  private ArrayList<PermissionDetail> permissions = new ArrayList<>();
+  private final IAppDetailsPresenter<IAppDetailsView> appDetailsPresenter;
 
-  public PermissionListAdapter(Context context) {
-    layoutInflater = LayoutInflater.from(context);
+  @Inject
+  public PermissionListAdapter(LayoutInflater layoutInflater, IAppDetailsPresenter<IAppDetailsView> appDetailsPresenter) {
+    this.layoutInflater = layoutInflater;
+    this.appDetailsPresenter = appDetailsPresenter;
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -31,13 +33,8 @@ public class PermissionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
   }
 
-  public void addAllAndNotify(ArrayList<PermissionDetail> permissions) {
-    this.permissions.addAll(permissions);
-    notifyDataSetChanged();
-  }
-
   @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-    PermissionDetail permissionDetail = permissions.get(position);
+    PermissionDetail permissionDetail = appDetailsPresenter.getItemAt(position);
     if (permissionDetail.viewType == PermissionDetail.VIEW_TYPE_ITEM) {
       ((PermissionListViewHolder) holder).permissionId.setText(permissionDetail.permissionName);
     } else {
@@ -46,11 +43,11 @@ public class PermissionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
   }
 
   @Override public int getItemCount() {
-    return permissions.size();
+    return appDetailsPresenter.getItemCount();
   }
 
   @Override public int getItemViewType(int position) {
-    return permissions.get(position).viewType;
+    return appDetailsPresenter.getItemAt(position).viewType;
   }
 
   static class PermissionListViewHolder extends RecyclerView.ViewHolder {
