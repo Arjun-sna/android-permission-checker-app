@@ -12,5 +12,5 @@ public class AppDetails {
   public Drawable icon;
   public String packageName;
   public ArrayList<String> grantedPermissionList = new ArrayList<>();
-  public ArrayList<String> deniedPermissionList = new ArrayList<>();
+  public final ArrayList<String> deniedPermissionList = new ArrayList<>();
 }

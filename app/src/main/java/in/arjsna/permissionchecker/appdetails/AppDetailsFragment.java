@@ -35,7 +35,6 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
   private ImageView appIcon;
   private TextView packageNameTv;
   private TextView appName;
-  private RecyclerView permissionsList;
   private TextView noPermissionLabel;
   private TextView openAppBtn;
   private TextView appDetails;
@@ -99,7 +98,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
     appName = mRootView.findViewById(R.id.app_name);
     noPermissionLabel = mRootView.findViewById(R.id.detail_label);
     packageNameTv = mRootView.findViewById(R.id.package_string);
-    permissionsList = mRootView.findViewById(R.id.permission_list);
+    RecyclerView permissionsList = mRootView.findViewById(R.id.permission_list);
     permissionsList.setLayoutManager(new LinearLayoutManager(getActivity()));
     permissionsList.setAdapter(permissionListAdapter);
     appDetailsPresenter.onViewInitialised();

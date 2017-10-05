@@ -15,7 +15,7 @@ public abstract class BaseFragment extends Fragment implements IMVPView {
     }
   }
 
-  public FragmentComponent getFragmentComponent() {
+  protected FragmentComponent getFragmentComponent() {
     return fragmentComponent;
   }
 }

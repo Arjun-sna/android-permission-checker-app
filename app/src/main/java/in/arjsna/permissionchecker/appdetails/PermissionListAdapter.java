@@ -51,7 +51,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
   }
 
   static class PermissionListViewHolder extends RecyclerView.ViewHolder {
-    TextView permissionId;
+    final TextView permissionId;
 
     PermissionListViewHolder(View itemView) {
       super(itemView);
@@ -60,7 +60,7 @@ public class PermissionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
   }
 
   static class SectionViewHolder extends RecyclerView.ViewHolder {
-    TextView sectionName;
+    final TextView sectionName;
 
     SectionViewHolder(View itemView) {
       super(itemView);

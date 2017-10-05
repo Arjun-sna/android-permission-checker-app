@@ -82,9 +82,9 @@ public class PermissionGroupListAdapter
   }
 
   static class PermissionViewHolder extends RecyclerView.ViewHolder {
-    TextView permissionName;
-    TextView permissionDes;
-    TextView appsCount;
+    final TextView permissionName;
+    final TextView permissionDes;
+    final TextView appsCount;
 
     public PermissionViewHolder(View itemView) {
       super(itemView);

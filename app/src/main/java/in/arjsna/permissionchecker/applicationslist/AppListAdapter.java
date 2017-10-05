@@ -1,6 +1,5 @@
 package in.arjsna.permissionchecker.applicationslist;
 
-import android.content.Context;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import in.arjsna.permissionchecker.R;
-import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import in.arjsna.permissionchecker.models.AppDetails;
 import javax.inject.Inject;
 
@@ -18,13 +16,11 @@ import javax.inject.Inject;
  */
 
 public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListViewHolder> {
-  private final Context context;
   private final LayoutInflater layoutInflater;
   private final IAppListPresenter<IAppListView> appListPresenter;
 
-  @Inject public AppListAdapter(@ActivityContext Context context,
-      IAppListPresenter<IAppListView> appListPresenter, LayoutInflater layoutInflater) {
-    this.context = context;
+  @Inject public AppListAdapter(IAppListPresenter<IAppListView> appListPresenter,
+      LayoutInflater layoutInflater) {
     this.appListPresenter = appListPresenter;
     this.layoutInflater = layoutInflater;
   }
@@ -47,8 +43,8 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
 
   static class AppListViewHolder extends RecyclerView.ViewHolder {
     private final IAppListPresenter<IAppListView> appListPresenter;
-    ImageView appIcon;
-    TextView appName;
+    final ImageView appIcon;
+    final TextView appName;
 
     public AppListViewHolder(View itemView, IAppListPresenter<IAppListView> appListPresenter) {
       super(itemView);

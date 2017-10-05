@@ -8,8 +8,8 @@ import java.util.Map;
  * Created by arjun on 7/6/17.
  */
 
-public class ResourceMap {
-  public static Map<String, Integer> resourceMap = new HashMap<String, Integer>() {{
+class ResourceMap {
+  public static final Map<String, Integer> resourceMap = new HashMap<String, Integer>() {{
     put("MICROPHONE", R.drawable.ic_mic);
     put("LOCATION", R.drawable.ic_location);
     put("PERSONAL INFO", R.drawable.ic_info);

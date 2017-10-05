@@ -9,7 +9,7 @@ import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import in.arjsna.permissionchecker.di.scopes.ActivityScope;
 
 @Module public class ActivityModule {
-  private AppCompatActivity appCompatActivity;
+  private final AppCompatActivity appCompatActivity;
 
   public ActivityModule(AppCompatActivity appCompatActivity) {
     this.appCompatActivity = appCompatActivity;

@@ -11,5 +11,5 @@ public class PermissionGroupDetails {
   public String permissionGroupName;
   public String permissionGroupDes;
   public int appsCount;
-  public Set<String> appPackages = new HashSet<>();
+  public final Set<String> appPackages = new HashSet<>();
 }

@@ -5,10 +5,10 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class BasePresenter<V extends IMVPView> implements IMVPPresenter<V> {
   private V view;
-  private CompositeDisposable compositeDisposable;
-  private Context context;
+  private final CompositeDisposable compositeDisposable;
+  private final Context context;
 
-  public BasePresenter(Context context, CompositeDisposable compositeDisposable) {
+  protected BasePresenter(Context context, CompositeDisposable compositeDisposable) {
     this.compositeDisposable = compositeDisposable;
     this.context = context;
   }
@@ -22,7 +22,7 @@ public class BasePresenter<V extends IMVPView> implements IMVPPresenter<V> {
     view = null;
   }
 
-  public V getView() {
+  protected V getView() {
     return view;
   }
 
@@ -30,7 +30,7 @@ public class BasePresenter<V extends IMVPView> implements IMVPPresenter<V> {
     return compositeDisposable;
   }
 
-  public Context getContext() {
+  protected Context getContext() {
     return context;
   }
 }
