@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
   compileSdkVersion 26
-  buildToolsVersion "26.0.1"
+  buildToolsVersion '26.0.2'
   defaultConfig {
     applicationId "in.arjsna.permissionchecker"
     minSdkVersion 15
@@ -48,4 +48,9 @@ dependencies {
   compile "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}"
   compile "io.reactivex.rxjava2:rxjava:${rxJavaVersion}"
   compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+
+  compile 'com.google.dagger:dagger:2.11'
+  annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+  provided 'javax.annotation:jsr250-api:1.0'
+  compile 'javax.inject:javax.inject:1'
 }

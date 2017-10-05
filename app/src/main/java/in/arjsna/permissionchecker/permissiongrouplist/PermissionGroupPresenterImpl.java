@@ -1,91 +1,73 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.permissiongrouplist;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ResolveInfo;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import in.arjsna.permissionchecker.basemvp.BasePresenter;
+import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
+import in.arjsna.permissionchecker.models.PermissionGroupDetails;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import javax.inject.Inject;
 
-/**
- * Created by arjun on 3/6/17.
- */
+public class PermissionGroupPresenterImpl<V extends IPermissionGroupView> extends BasePresenter<V>
+    implements IPermissionGroupPresenter<V> {
 
-public class PermissionListFragment extends Fragment {
-  private View mRootView;
-  private PermissionGroupListAdapter permissionGroupListAdapter;
-  private RecyclerView permissionsList;
   private ArrayList<PermissionGroupDetails> permissionList;
-  private ProgressBar pb;
 
-  public PermissionListFragment() {
-    setHasOptionsMenu(true);
-    setRetainInstance(true);
+  @Inject public PermissionGroupPresenterImpl(@ActivityContext Context context,
+      CompositeDisposable compositeDisposable) {
+    super(context, compositeDisposable);
   }
 
-  @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
-      @Nullable Bundle savedInstanceState) {
-    mRootView = inflater.inflate(R.layout.fragment_permission_list, container, false);
-    setUpToolBar();
-    pb = mRootView.findViewById(R.id.permission_list_progress_bar);
-    permissionsList = mRootView.findViewById(R.id.permission_list);
-    permissionGroupListAdapter = new PermissionGroupListAdapter(getContext());
-    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-    permissionsList.setLayoutManager(layoutManager);
-    permissionsList.setAdapter(permissionGroupListAdapter);
-    if (permissionList == null) {
-      makeRx();
-    } else {
-      permissionGroupListAdapter.addAll(permissionList);
-    }
-    return mRootView;
+  @Override public void onViewInitialised() {
+    makeRx();
+  }
+
+  @Override public PermissionGroupDetails getItemAt(int position) {
+    return permissionList != null ? permissionList.get(position) : null;
+  }
+
+  @Override public int getItemCount() {
+    return permissionList != null ? permissionList.size() : 0;
   }
 
   private void makeRx() {
-    Single<ArrayList<PermissionGroupDetails>> permissions = Single.fromCallable(() -> {
+    if (permissionList != null && permissionList.size() > 0) {
+      getView().notifyListAdapter();
+      return;
+    }
+    Single.fromCallable(() -> {
       TreeMap<String, PermissionGroupDetails> groups = fetchPermList();
       return new ArrayList<>(groups.values());
-    });
-    permissions.subscribeOn(Schedulers.computation())
+    })
+        .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(new SingleObserver<ArrayList<PermissionGroupDetails>>() {
           @Override public void onSubscribe(@NonNull Disposable d) {
-            pb.setVisibility(View.VISIBLE);
-            permissionsList.setVisibility(View.GONE);
+            getView().showProgressBar();
+            getView().hideListView();
           }
 
           @Override
           public void onSuccess(@NonNull ArrayList<PermissionGroupDetails> groupDetailsList) {
             Log.i("Single subscriber test ", groupDetailsList.size() + " ");
-            pb.setVisibility(View.GONE);
-            permissionsList.setVisibility(View.VISIBLE);
+            getView().hideProgressBar();
+            getView().showListView();
             permissionList = groupDetailsList;
-            permissionGroupListAdapter.addAll(groupDetailsList);
+            getView().notifyListAdapter();
           }
 
           @Override public void onError(@NonNull Throwable e) {
@@ -95,14 +77,14 @@ public class PermissionListFragment extends Fragment {
   }
 
   private TreeMap<String, PermissionGroupDetails> fetchPermList() {
-    PackageManager packageManager = getActivity().getPackageManager();
+    PackageManager packageManager = getContext().getPackageManager();
     Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
     mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
     List<ResolveInfo> applicationInfos =
         packageManager.queryIntentActivities(mainIntent, PackageManager.GET_META_DATA);
     TreeMap<String, PermissionGroupDetails> permissionGroupDetailsMap = new TreeMap<>();
     addMiscCategory(permissionGroupDetailsMap);
-    addNoPermissionCategroy(permissionGroupDetailsMap);
+    addNoPermissionCategory(permissionGroupDetailsMap);
     for (ResolveInfo applicationInfo : applicationInfos) {
       try {
         PackageInfo packageInfo =
@@ -152,7 +134,7 @@ public class PermissionListFragment extends Fragment {
     return permissionGroupDetailsMap;
   }
 
-  private void addNoPermissionCategroy(
+  private void addNoPermissionCategory(
       TreeMap<String, PermissionGroupDetails> permissionGroupDetailsMap) {
     PermissionGroupDetails miscPermissionGroup = new PermissionGroupDetails();
     miscPermissionGroup.permissionGroupDes = "App don't need any permission";
@@ -167,34 +149,5 @@ public class PermissionListFragment extends Fragment {
     miscPermissionGroup.permissionGroupName = "MISC PERMISSION";
     miscPermissionGroup.appsCount = 0;
     permissionGroupDetailsMap.put("z_MISC", miscPermissionGroup);
-  }
-
-  private void setUpToolBar() {
-    Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-    TextView titleTextView = toolbar.findViewById(R.id.toolbar_title);
-    titleTextView.setText("Permission Groups");
-    toolbar.setTitle("");
-    ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-    ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    inflater.inflate(R.menu.permissionlist_menu, menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.listby:
-        getActivity().getSupportFragmentManager()
-            .beginTransaction()
-            .setCustomAnimations(R.anim.slide_in_right, R.anim.zoom_out, R.anim.zoom_in,
-                R.anim.slide_out_right)
-            .replace(R.id.permission_container, new AppListFragment())
-            .addToBackStack("App apps")
-            .commit();
-        return true;
-      default:
-        return super.onOptionsItemSelected(item);
-    }
   }
 }

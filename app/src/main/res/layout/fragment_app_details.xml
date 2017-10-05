@@ -12,7 +12,7 @@
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      app:layout_constraintBottom_toTopOf="@+id/detail_label"
+      app:layout_constraintBottom_toTopOf="@+id/permission_list"
       app:cardElevation="0.5dp"
       app:cardCornerRadius="0dp"
       >
@@ -31,28 +31,38 @@
           app:layout_constraintLeft_toLeftOf="parent"
           app:layout_constraintRight_toLeftOf="@+id/app_name"
           app:layout_constraintTop_toTopOf="parent"
+          android:transitionName="@string/icon_transition"
           />
       <TextView
           android:id="@+id/app_name"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:textColor="@android:color/black"
-          android:textSize="20sp"
+          android:textSize="16sp"
           app:layout_constraintBottom_toTopOf="@+id/package_string"
           app:layout_constraintLeft_toRightOf="@+id/app_picture"
           app:layout_constraintRight_toRightOf="parent"
           app:layout_constraintTop_toTopOf="@+id/app_picture"
-          app:layout_constraintVertical_chainStyle="packed"
           />
       <TextView
           android:id="@+id/package_string"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:textColor="@android:color/darker_gray"
-          android:textSize="14sp"
-          app:layout_constraintBottom_toBottomOf="@+id/app_picture"
-          app:layout_constraintLeft_toLeftOf="@+id/app_name"
+          android:textSize="12sp"
+          app:layout_constraintBottom_toTopOf="@+id/detail_label"
           app:layout_constraintTop_toBottomOf="@+id/app_name"
+          app:layout_constraintLeft_toLeftOf="@+id/app_name"
+          />
+      <TextView
+          android:id="@+id/detail_label"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textColor="@android:color/darker_gray"
+          android:textSize="12sp"
+          app:layout_constraintLeft_toLeftOf="@+id/app_name"
+          app:layout_constraintTop_toBottomOf="@+id/package_string"
+          app:layout_constraintBottom_toBottomOf="@+id/app_picture"
           />
       <TextView
           android:id="@+id/open_app"
@@ -102,17 +112,6 @@
           />
     </android.support.constraint.ConstraintLayout>
   </android.support.v7.widget.CardView>
-  <TextView
-      android:id="@+id/detail_label"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textSize="16sp"
-      android:padding="8dp"
-      app:layout_constraintBottom_toTopOf="@+id/permission_list"
-      app:layout_constraintLeft_toLeftOf="parent"
-      app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/header_view"
-      />
   <android.support.v7.widget.RecyclerView
       android:id="@+id/permission_list"
       android:layout_width="0dp"
@@ -120,7 +119,7 @@
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintLeft_toLeftOf="parent"
       app:layout_constraintRight_toRightOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/detail_label"
+      app:layout_constraintTop_toBottomOf="@+id/header_view"
       />
 
 </android.support.constraint.ConstraintLayout>

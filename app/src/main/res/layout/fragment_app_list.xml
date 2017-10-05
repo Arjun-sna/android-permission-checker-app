@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
-  <ProgressBar
+  <android.support.v4.widget.ContentLoadingProgressBar
       android:id="@+id/app_list_progress_bar"
       android:visibility="gone"
       android:layout_width="wrap_content"

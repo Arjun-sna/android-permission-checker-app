@@ -1,14 +1,13 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.appdetails;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,42 +20,52 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.jakewharton.rxbinding2.view.RxView;
-import io.reactivex.Single;
-import io.reactivex.SingleObserver;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import java.util.ArrayList;
-import java.util.Arrays;
+import in.arjsna.permissionchecker.R;
+import in.arjsna.permissionchecker.Transition;
+import in.arjsna.permissionchecker.basemvp.BaseFragment;
+import javax.inject.Inject;
 
 /**
  * Created by arjun on 7/6/17.
  */
 
-public class AppDetailsFragment extends Fragment {
+public class AppDetailsFragment extends BaseFragment implements IAppDetailsView {
   private static final int UNINSTALL_APP_REQUEST = 500;
   private View mRootView;
   private ImageView appIcon;
   private TextView packageNameTv;
   private TextView appName;
   private RecyclerView permissionsList;
-  private PermissionListAdapter permissionListAdapter;
   private TextView noPermissionLabel;
   private TextView openAppBtn;
   private TextView appDetails;
   private String mPackageName;
   private TextView uninstall;
 
+  @Inject public PermissionListAdapter permissionListAdapter;
+
+  @Inject IAppDetailsPresenter<IAppDetailsView> appDetailsPresenter;
+
+  @Override public void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      setSharedElementEnterTransition(new Transition());
+      setSharedElementReturnTransition(new Transition());
+    }
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_app_details, container, false);
-    setUpToolBar();
+    if (getFragmentComponent() != null) {
+      getFragmentComponent().inject(this);
+      appDetailsPresenter.onAttach(this);
+    }
     mPackageName = getArguments().getString("package_name");
+    appDetailsPresenter.onIntentDataAvailable(mPackageName);
     initialiseViews();
     bindEvents();
-    fetchDetails(mPackageName);
     return mRootView;
   }
 
@@ -82,6 +91,7 @@ public class AppDetailsFragment extends Fragment {
   }
 
   private void initialiseViews() {
+    setUpToolBar();
     openAppBtn = mRootView.findViewById(R.id.open_app);
     appDetails = mRootView.findViewById(R.id.app_details);
     uninstall = mRootView.findViewById(R.id.app_uninstall);
@@ -91,49 +101,8 @@ public class AppDetailsFragment extends Fragment {
     packageNameTv = mRootView.findViewById(R.id.package_string);
     permissionsList = mRootView.findViewById(R.id.permission_list);
     permissionsList.setLayoutManager(new LinearLayoutManager(getActivity()));
-    permissionListAdapter = new PermissionListAdapter(getActivity());
     permissionsList.setAdapter(permissionListAdapter);
-  }
-
-  private void fetchDetails(final String packageName) {
-    Single<AppDetails> appDetailsSingle = Single.fromCallable(() -> {
-      AppDetails appDetails = new AppDetails();
-      PackageManager packageManager = getActivity().getPackageManager();
-      PackageInfo packageInfo = packageManager.getPackageInfo(packageName,
-          PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
-      appDetails.name = packageInfo.applicationInfo.loadLabel(packageManager).toString();
-      appDetails.icon = packageInfo.applicationInfo.loadIcon(packageManager);
-      appDetails.packageName = packageName;
-      if (packageInfo.requestedPermissions != null) {
-        appDetails.permissionList =
-            new ArrayList<>(Arrays.asList(packageInfo.requestedPermissions));
-      }
-      return appDetails;
-    });
-    appDetailsSingle.subscribeOn(Schedulers.computation())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(new SingleObserver<AppDetails>() {
-          @Override public void onSubscribe(@NonNull Disposable d) {
-
-          }
-
-          @Override public void onSuccess(@NonNull AppDetails appDetails) {
-            appIcon.setImageDrawable(appDetails.icon);
-            appName.setText(appDetails.name);
-            packageNameTv.setText(appDetails.packageName);
-            if (appDetails.permissionList == null) {
-              noPermissionLabel.setText("No permissions required");
-            } else {
-              noPermissionLabel.setText(
-                  getString(R.string.permission_count, appDetails.permissionList.size()));
-              permissionListAdapter.addAllAndNotify(appDetails.permissionList);
-            }
-          }
-
-          @Override public void onError(@NonNull Throwable e) {
-            e.printStackTrace();
-          }
-        });
+    appDetailsPresenter.onViewInitialised();
   }
 
   private void setUpToolBar() {
@@ -162,5 +131,29 @@ public class AppDetailsFragment extends Fragment {
       return;
     }
     super.onActivityResult(requestCode, resultCode, data);
+  }
+
+  @Override public void setAppIcon(Drawable icon) {
+    appIcon.setImageDrawable(icon);
+  }
+
+  @Override public void setAppName(String name) {
+    appName.setText(name);
+  }
+
+  @Override public void setPackageName(String packageName) {
+    packageNameTv.setText(packageName);
+  }
+
+  @Override public void setLabelText(String text) {
+    noPermissionLabel.setText(text);
+  }
+
+  @Override public void setPermissionCount(int count) {
+    setLabelText(getString(R.string.permission_count, count));
+  }
+
+  @Override public void notifyAdapter() {
+    permissionListAdapter.notifyDataSetChanged();
   }
 }
