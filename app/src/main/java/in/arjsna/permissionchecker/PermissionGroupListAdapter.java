@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  * Created by arjun on 4/6/17.
@@ -22,9 +24,11 @@ public class PermissionGroupListAdapter
   private final ArrayList<PermissionGroupDetails> list = new ArrayList<>();
   private final LayoutInflater layoutInflater;
 
-  public PermissionGroupListAdapter(Context context) {
+  @Inject
+  public PermissionGroupListAdapter(@ActivityContext Context context,
+      LayoutInflater layoutInflater) {
     this.context = context;
-    layoutInflater = LayoutInflater.from(context);
+    this.layoutInflater = layoutInflater;
   }
 
   @Override public PermissionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -74,7 +78,7 @@ public class PermissionGroupListAdapter
     return list.size();
   }
 
-  void addAll(List<PermissionGroupDetails> strings) {
+  public void addAll(List<PermissionGroupDetails> strings) {
     list.addAll(strings);
     notifyDataSetChanged();
   }

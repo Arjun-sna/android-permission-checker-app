@@ -2,6 +2,7 @@ package in.arjsna.permissionchecker.di.modules;
 
 import android.app.Application;
 import android.content.Context;
+import android.view.LayoutInflater;
 import dagger.Module;
 import dagger.Provides;
 import in.arjsna.permissionchecker.di.qualifiers.ApplicationContext;

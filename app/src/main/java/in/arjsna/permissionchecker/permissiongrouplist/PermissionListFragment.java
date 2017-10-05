@@ -1,4 +1,4 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.permissiongrouplist;
 
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -21,6 +21,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import in.arjsna.permissionchecker.AppListFragment;
+import in.arjsna.permissionchecker.PermissionGroupDetails;
+import in.arjsna.permissionchecker.PermissionGroupListAdapter;
+import in.arjsna.permissionchecker.R;
+import in.arjsna.permissionchecker.basemvp.BaseFragment;
+import in.arjsna.permissionchecker.di.components.ActivityComponent;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,17 +36,21 @@ import io.reactivex.schedulers.Schedulers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+import javax.inject.Inject;
 
 /**
  * Created by arjun on 3/6/17.
  */
 
-public class PermissionListFragment extends Fragment {
+public class PermissionListFragment extends BaseFragment {
   private View mRootView;
-  private PermissionGroupListAdapter permissionGroupListAdapter;
   private RecyclerView permissionsList;
   private ArrayList<PermissionGroupDetails> permissionList;
   private ProgressBar pb;
+  @Inject
+  public PermissionGroupListAdapter permissionGroupListAdapter;
+  @Inject
+  public LinearLayoutManager linearLayoutManager;
 
   public PermissionListFragment() {
     setHasOptionsMenu(true);
@@ -51,19 +61,25 @@ public class PermissionListFragment extends Fragment {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_permission_list, container, false);
+    ActivityComponent activityComponent = getActivityComponent();
+    if (activityComponent != null) {
+      activityComponent.inject(this);
+    }
     setUpToolBar();
-    pb = mRootView.findViewById(R.id.permission_list_progress_bar);
-    permissionsList = mRootView.findViewById(R.id.permission_list);
-    permissionGroupListAdapter = new PermissionGroupListAdapter(getContext());
-    LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-    permissionsList.setLayoutManager(layoutManager);
-    permissionsList.setAdapter(permissionGroupListAdapter);
+    initViews();
     if (permissionList == null) {
       makeRx();
     } else {
       permissionGroupListAdapter.addAll(permissionList);
     }
     return mRootView;
+  }
+
+  private void initViews() {
+    pb = mRootView.findViewById(R.id.permission_list_progress_bar);
+    permissionsList = mRootView.findViewById(R.id.permission_list);
+    permissionsList.setLayoutManager(linearLayoutManager);
+    permissionsList.setAdapter(permissionGroupListAdapter);
   }
 
   private void makeRx() {
