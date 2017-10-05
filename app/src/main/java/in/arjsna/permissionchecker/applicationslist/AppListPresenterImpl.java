@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import in.arjsna.permissionchecker.AppDetails;
+import in.arjsna.permissionchecker.models.AppDetails;
 import in.arjsna.permissionchecker.basemvp.BasePresenter;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import io.reactivex.Single;
@@ -31,6 +31,10 @@ public class AppListPresenterImpl<V extends IAppListView> extends BasePresenter<
   }
 
   private void getAppDetails() {
+    if (appDetailList != null && appDetailList.size() > 0) {
+      getView().notifyListAdapter();
+      return;
+    }
     Single.fromCallable(() -> {
       ArrayList<AppDetails> appDetailList = new ArrayList<>();
       if (packages == null) {

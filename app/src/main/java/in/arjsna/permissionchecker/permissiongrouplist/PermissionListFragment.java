@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import dagger.Lazy;
 import in.arjsna.permissionchecker.applicationslist.AppListFragment;
-import in.arjsna.permissionchecker.PermissionGroupListAdapter;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
 import javax.inject.Inject;

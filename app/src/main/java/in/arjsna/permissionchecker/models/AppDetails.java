@@ -1,4 +1,4 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.models;
 
 import android.graphics.drawable.Drawable;
 import java.util.ArrayList;

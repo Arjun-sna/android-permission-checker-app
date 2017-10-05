@@ -7,7 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ResolveInfo;
 import android.util.Log;
-import in.arjsna.permissionchecker.PermissionGroupDetails;
+import in.arjsna.permissionchecker.models.PermissionGroupDetails;
 import in.arjsna.permissionchecker.basemvp.BasePresenter;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import io.reactivex.Single;

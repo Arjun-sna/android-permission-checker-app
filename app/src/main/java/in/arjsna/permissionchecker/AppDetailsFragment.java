@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.jakewharton.rxbinding2.view.RxView;
+import in.arjsna.permissionchecker.models.AppDetails;
+import in.arjsna.permissionchecker.models.PermissionDetail;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;

@@ -1,4 +1,4 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.models;
 
 import java.util.HashSet;
 import java.util.Set;

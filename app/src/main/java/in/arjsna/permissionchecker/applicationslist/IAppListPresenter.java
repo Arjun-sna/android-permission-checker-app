@@ -1,6 +1,6 @@
 package in.arjsna.permissionchecker.applicationslist;
 
-import in.arjsna.permissionchecker.AppDetails;
+import in.arjsna.permissionchecker.models.AppDetails;
 import in.arjsna.permissionchecker.basemvp.IMVPPresenter;
 import java.util.ArrayList;
 

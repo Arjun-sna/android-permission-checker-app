@@ -1,4 +1,4 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.permissiongrouplist;
 
 import android.content.Context;
 import android.os.Build;
@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import in.arjsna.permissionchecker.R;
+import in.arjsna.permissionchecker.ResourceMap;
 import in.arjsna.permissionchecker.applicationslist.AppListFragment;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
-import in.arjsna.permissionchecker.permissiongrouplist.IPermissionGroupPresenter;
-import in.arjsna.permissionchecker.permissiongrouplist.IPermissionGroupView;
 import java.util.ArrayList;
 import javax.inject.Inject;
 
