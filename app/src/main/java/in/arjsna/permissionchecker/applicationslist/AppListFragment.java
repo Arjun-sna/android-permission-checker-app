@@ -105,7 +105,7 @@ public class AppListFragment extends BaseFragment implements IAppListView {
         .addSharedElement(
             ((AppListAdapter.AppListViewHolder) mAppListView.findViewHolderForAdapterPosition(
                 position)).appIcon, "icon_transition")
-        .setCustomAnimations(R.anim.zoom_in, R.anim.slide_out_right, R.anim.slide_in_right,
+        .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in,
             R.anim.zoom_out)
         .replace(R.id.permission_container, appDetailsFragment)
         .addToBackStack("appdetail")

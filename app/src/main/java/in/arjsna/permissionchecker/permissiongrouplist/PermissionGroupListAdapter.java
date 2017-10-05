@@ -57,8 +57,8 @@ public class PermissionGroupListAdapter
       appListFragment.setArguments(bundle);
       ((AppCompatActivity) context).getSupportFragmentManager()
           .beginTransaction()
-          .setCustomAnimations(R.anim.slide_in_right, R.anim.zoom_out, R.anim.zoom_in,
-              R.anim.slide_out_right)
+          .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in,
+              R.anim.zoom_out)
           .replace(R.id.permission_container, appListFragment)
           .addToBackStack("Permission Details")
           .commit();

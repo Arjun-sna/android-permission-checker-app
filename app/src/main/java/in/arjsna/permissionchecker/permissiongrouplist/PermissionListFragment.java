@@ -76,8 +76,8 @@ public class PermissionListFragment extends BaseFragment implements IPermissionG
       case R.id.listby:
         getActivity().getSupportFragmentManager()
             .beginTransaction()
-            .setCustomAnimations(R.anim.slide_in_right, R.anim.zoom_out, R.anim.zoom_in,
-                R.anim.slide_out_right)
+            .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in,
+                R.anim.zoom_out)
             .replace(R.id.permission_container, new AppListFragment())
             .addToBackStack("App apps")
             .commit();
