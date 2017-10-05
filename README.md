@@ -5,4 +5,7 @@ Android App to check requested permission details of all installed applications
 
 <img src="https://arjun-sna.github.io/raw/permission_app_s2.png" width="250" />  <img src="https://arjun-sna.github.io/raw/permission_app_s1.png" width="250" />  <img src="https://arjun-sna.github.io/raw/permission_app_s3.jpg" width="250" />
 
-More details on each app other than the permissions will be added soon.
+This app can be used as a reference for learning
+* RxJava2
+* Dagger2
+* MVP architecture.
