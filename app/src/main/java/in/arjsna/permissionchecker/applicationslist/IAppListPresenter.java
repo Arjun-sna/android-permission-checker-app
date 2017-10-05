@@ -1,7 +1,7 @@
 package in.arjsna.permissionchecker.applicationslist;
 
-import in.arjsna.permissionchecker.models.AppDetails;
 import in.arjsna.permissionchecker.basemvp.IMVPPresenter;
+import in.arjsna.permissionchecker.models.AppDetails;
 import java.util.ArrayList;
 
 public interface IAppListPresenter<V extends IAppListView> extends IMVPPresenter<V> {

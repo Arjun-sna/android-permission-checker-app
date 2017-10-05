@@ -1,7 +1,6 @@
 package in.arjsna.permissionchecker;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import in.arjsna.permissionchecker.basemvp.BaseActivity;
 import in.arjsna.permissionchecker.permissiongrouplist.PermissionListFragment;

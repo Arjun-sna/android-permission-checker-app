@@ -9,10 +9,9 @@ public class PermissionsApp extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
-    applicationComponent =
-        (DaggerApplicationComponent) DaggerApplicationComponent.builder()
-            .applicationModule(new ApplicationModule(this))
-            .build();
+    applicationComponent = (DaggerApplicationComponent) DaggerApplicationComponent.builder()
+        .applicationModule(new ApplicationModule(this))
+        .build();
   }
 
   public DaggerApplicationComponent getApplicationComponent() {

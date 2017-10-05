@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import in.arjsna.permissionchecker.R;
-import in.arjsna.permissionchecker.ResourceMap;
 import in.arjsna.permissionchecker.applicationslist.AppListFragment;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import java.util.ArrayList;
@@ -40,7 +39,8 @@ public class PermissionGroupListAdapter
   }
 
   @Override public void onBindViewHolder(final PermissionViewHolder holder, int position) {
-    String[] permissionSplit = permissionGroupPresenter.getItemAt(position).permissionGroupName.split("\\.");
+    String[] permissionSplit =
+        permissionGroupPresenter.getItemAt(position).permissionGroupName.split("\\.");
     String permissionHeader = "";
     if (permissionSplit.length > 0) {
       permissionHeader = permissionSplit[permissionSplit.length - 1].replace("_", " ");
@@ -48,17 +48,17 @@ public class PermissionGroupListAdapter
     holder.permissionName.setText(permissionHeader);
     setDrawable(holder, ResourceMap.resourceMap.get(permissionHeader));
     holder.permissionDes.setText(permissionGroupPresenter.getItemAt(position).permissionGroupDes);
-    holder.appsCount.setText(String.valueOf(permissionGroupPresenter.getItemAt(position).appsCount));
+    holder.appsCount.setText(
+        String.valueOf(permissionGroupPresenter.getItemAt(position).appsCount));
     holder.itemView.setOnClickListener(v -> {
       Bundle bundle = new Bundle();
-      bundle.putStringArrayList("packages",
-          new ArrayList<>(permissionGroupPresenter.getItemAt(holder.getAdapterPosition()).appPackages));
+      bundle.putStringArrayList("packages", new ArrayList<>(
+          permissionGroupPresenter.getItemAt(holder.getAdapterPosition()).appPackages));
       AppListFragment appListFragment = new AppListFragment();
       appListFragment.setArguments(bundle);
       ((AppCompatActivity) context).getSupportFragmentManager()
           .beginTransaction()
-          .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in,
-              R.anim.zoom_out)
+          .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in, R.anim.zoom_out)
           .replace(R.id.permission_container, appListFragment)
           .addToBackStack("Permission Details")
           .commit();

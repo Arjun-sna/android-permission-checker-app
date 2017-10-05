@@ -10,13 +10,13 @@ import android.transition.TransitionSet;
 import android.util.AttributeSet;
 
 /**
- * Transition that performs almost exactly like {@link android.transition.AutoTransition}, but has an
+ * Transition that performs almost exactly like {@link android.transition.AutoTransition}, but has
+ * an
  * added {@link ChangeImageTransform} to support properly scaling up our gorgeous kittens.
  *
  * @author bherbst
  */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class Transition extends TransitionSet {
+@TargetApi(Build.VERSION_CODES.LOLLIPOP) public class Transition extends TransitionSet {
   public Transition() {
     init();
   }

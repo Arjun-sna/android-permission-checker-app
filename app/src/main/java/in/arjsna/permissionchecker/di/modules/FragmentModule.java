@@ -1,11 +1,9 @@
 package in.arjsna.permissionchecker.di.modules;
 
 import android.content.Context;
-import android.support.transition.TransitionSet;
 import android.support.v7.widget.LinearLayoutManager;
 import dagger.Module;
 import dagger.Provides;
-import in.arjsna.permissionchecker.Transition;
 import in.arjsna.permissionchecker.appdetails.AppDetailsPresenterImpl;
 import in.arjsna.permissionchecker.appdetails.IAppDetailsPresenter;
 import in.arjsna.permissionchecker.appdetails.IAppDetailsView;

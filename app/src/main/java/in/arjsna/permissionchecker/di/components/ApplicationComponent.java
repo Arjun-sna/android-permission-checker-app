@@ -7,11 +7,8 @@ import in.arjsna.permissionchecker.di.modules.ApplicationModule;
 import in.arjsna.permissionchecker.di.qualifiers.ApplicationContext;
 import javax.inject.Singleton;
 
-@Singleton
-@Component(modules = ApplicationModule.class)
-public interface ApplicationComponent {
+@Singleton @Component(modules = ApplicationModule.class) public interface ApplicationComponent {
   void inject(PermissionsApp permissionsAppApp);
 
-  @ApplicationContext
-  Context getContext();
+  @ApplicationContext Context getContext();
 }

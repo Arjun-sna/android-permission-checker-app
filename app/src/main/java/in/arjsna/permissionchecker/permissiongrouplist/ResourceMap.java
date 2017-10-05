@@ -1,5 +1,6 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.permissiongrouplist;
 
+import in.arjsna.permissionchecker.R;
 import java.util.HashMap;
 import java.util.Map;
 

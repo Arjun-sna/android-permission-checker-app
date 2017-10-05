@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import in.arjsna.permissionchecker.appdetails.AppDetailsFragment;
 import in.arjsna.permissionchecker.R;
+import in.arjsna.permissionchecker.appdetails.AppDetailsFragment;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
 import in.arjsna.permissionchecker.models.AppDetails;
 import javax.inject.Inject;
@@ -105,8 +105,7 @@ public class AppListFragment extends BaseFragment implements IAppListView {
         .addSharedElement(
             ((AppListAdapter.AppListViewHolder) mAppListView.findViewHolderForAdapterPosition(
                 position)).appIcon, "icon_transition")
-        .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in,
-            R.anim.zoom_out)
+        .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in, R.anim.zoom_out)
         .replace(R.id.permission_container, appDetailsFragment)
         .addToBackStack("appdetail")
         .commit();

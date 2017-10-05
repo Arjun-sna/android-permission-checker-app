@@ -17,8 +17,8 @@ public class PermissionListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
   private final LayoutInflater layoutInflater;
   private final IAppDetailsPresenter<IAppDetailsView> appDetailsPresenter;
 
-  @Inject
-  public PermissionListAdapter(LayoutInflater layoutInflater, IAppDetailsPresenter<IAppDetailsView> appDetailsPresenter) {
+  @Inject public PermissionListAdapter(LayoutInflater layoutInflater,
+      IAppDetailsPresenter<IAppDetailsView> appDetailsPresenter) {
     this.layoutInflater = layoutInflater;
     this.appDetailsPresenter = appDetailsPresenter;
   }

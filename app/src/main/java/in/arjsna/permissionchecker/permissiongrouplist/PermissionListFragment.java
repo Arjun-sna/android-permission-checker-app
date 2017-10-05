@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import dagger.Lazy;
-import in.arjsna.permissionchecker.applicationslist.AppListFragment;
 import in.arjsna.permissionchecker.R;
+import in.arjsna.permissionchecker.applicationslist.AppListFragment;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
 import javax.inject.Inject;
 
@@ -76,8 +76,7 @@ public class PermissionListFragment extends BaseFragment implements IPermissionG
       case R.id.listby:
         getActivity().getSupportFragmentManager()
             .beginTransaction()
-            .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in,
-                R.anim.zoom_out)
+            .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in, R.anim.zoom_out)
             .replace(R.id.permission_container, new AppListFragment())
             .addToBackStack("App apps")
             .commit();
@@ -103,6 +102,7 @@ public class PermissionListFragment extends BaseFragment implements IPermissionG
   @Override public void showListView() {
     permissionsList.setVisibility(View.VISIBLE);
   }
+
   @Override public void hideListView() {
     permissionsList.setVisibility(View.GONE);
   }
