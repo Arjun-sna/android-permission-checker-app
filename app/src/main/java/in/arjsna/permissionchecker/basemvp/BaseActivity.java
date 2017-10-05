@@ -11,11 +11,11 @@ public abstract class BaseActivity extends AppCompatActivity implements IMVPView
   private DaggerActivityComponent activityComponent;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
     activityComponent = (DaggerActivityComponent) DaggerActivityComponent.builder()
         .activityModule(new ActivityModule(this))
         .applicationComponent(((PermissionsApp) getApplication()).getApplicationComponent())
         .build();
+    super.onCreate(savedInstanceState);
   }
 
   public DaggerActivityComponent getActivityComponent() {
