@@ -1,4 +1,4 @@
-package in.arjsna.permissionchecker;
+package in.arjsna.permissionchecker.applicationslist;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,8 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.util.ArrayList;
+import in.arjsna.permissionchecker.AppDetails;
+import in.arjsna.permissionchecker.AppDetailsFragment;
+import in.arjsna.permissionchecker.R;
+import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import java.util.List;
+import javax.inject.Inject;
 
 /**
  * Created by arjun on 7/6/17.
@@ -19,11 +23,13 @@ import java.util.List;
 public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListViewHolder> {
   private final Context context;
   private final LayoutInflater layoutInflater;
-  ArrayList<AppDetails> item = new ArrayList<>();
+  private final IAppListPresenter<IAppListView> appListPresenter;
 
-  public AppListAdapter(Context context) {
+  @Inject public AppListAdapter(@ActivityContext Context context,
+      IAppListPresenter<IAppListView> appListPresenter, LayoutInflater layoutInflater) {
     this.context = context;
-    this.layoutInflater = LayoutInflater.from(context);
+    this.appListPresenter = appListPresenter;
+    this.layoutInflater = layoutInflater;
   }
 
   @Override public AppListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -31,7 +37,7 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
   }
 
   @Override public void onBindViewHolder(AppListViewHolder holder, int position) {
-    final AppDetails appDetails = item.get(position);
+    final AppDetails appDetails = appListPresenter.getItemAt(position);
     holder.appIcon.setImageDrawable(appDetails.icon);
     holder.appName.setText(appDetails.name);
     holder.itemView.setOnClickListener(v -> {
@@ -39,7 +45,7 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
       bundle.putString("package_name", appDetails.packageName);
       AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
       appDetailsFragment.setArguments(bundle);
-      ((AppCompatActivity)context).getSupportFragmentManager()
+      ((AppCompatActivity) context).getSupportFragmentManager()
           .beginTransaction()
           .setCustomAnimations(R.anim.slide_in_right, R.anim.zoom_out, R.anim.zoom_in,
               R.anim.slide_out_right)
@@ -50,17 +56,13 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
   }
 
   @Override public int getItemCount() {
-    return item.size();
-  }
-
-  public void addAllAndNotify(List<AppDetails> appDetails) {
-    item.addAll(appDetails);
-    notifyDataSetChanged();
+    return appListPresenter.getItemCount();
   }
 
   static class AppListViewHolder extends RecyclerView.ViewHolder {
     ImageView appIcon;
     TextView appName;
+
     public AppListViewHolder(View itemView) {
       super(itemView);
       appIcon = (ImageView) itemView.findViewById(R.id.app_icon_iv);

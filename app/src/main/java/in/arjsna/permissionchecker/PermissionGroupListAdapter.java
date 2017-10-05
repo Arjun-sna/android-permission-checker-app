@@ -9,11 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import in.arjsna.permissionchecker.applicationslist.AppListFragment;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import in.arjsna.permissionchecker.permissiongrouplist.IPermissionGroupPresenter;
 import in.arjsna.permissionchecker.permissiongrouplist.IPermissionGroupView;
 import java.util.ArrayList;
-import java.util.List;
 import javax.inject.Inject;
 
 /**

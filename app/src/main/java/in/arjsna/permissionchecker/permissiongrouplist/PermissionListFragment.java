@@ -15,11 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import dagger.Lazy;
-import in.arjsna.permissionchecker.AppListFragment;
+import in.arjsna.permissionchecker.applicationslist.AppListFragment;
 import in.arjsna.permissionchecker.PermissionGroupListAdapter;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
-import in.arjsna.permissionchecker.di.components.ActivityComponent;
 import javax.inject.Inject;
 
 /**
@@ -49,11 +48,6 @@ public class PermissionListFragment extends BaseFragment implements IPermissionG
     }
     setUpToolBar();
     initViews();
-    //if (permissionList == null) {
-    //  makeRx();
-    //} else {
-    //  permissionGroupListAdapter.addAll(permissionList);
-    //}
     return mRootView;
   }
 
