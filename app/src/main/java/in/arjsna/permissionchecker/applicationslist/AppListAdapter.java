@@ -1,18 +1,16 @@
 package in.arjsna.permissionchecker.applicationslist;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import in.arjsna.permissionchecker.models.AppDetails;
-import in.arjsna.permissionchecker.AppDetailsFragment;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
+import in.arjsna.permissionchecker.models.AppDetails;
 import javax.inject.Inject;
 
 /**
@@ -32,26 +30,15 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
   }
 
   @Override public AppListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    return new AppListViewHolder(layoutInflater.inflate(R.layout.app_list_item, parent, false));
+    return new AppListViewHolder(layoutInflater.inflate(R.layout.app_list_item, parent, false),
+        appListPresenter);
   }
 
   @Override public void onBindViewHolder(AppListViewHolder holder, int position) {
     final AppDetails appDetails = appListPresenter.getItemAt(position);
     holder.appIcon.setImageDrawable(appDetails.icon);
     holder.appName.setText(appDetails.name);
-    holder.itemView.setOnClickListener(v -> {
-      Bundle bundle = new Bundle();
-      bundle.putString("package_name", appDetails.packageName);
-      AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
-      appDetailsFragment.setArguments(bundle);
-      ((AppCompatActivity) context).getSupportFragmentManager()
-          .beginTransaction()
-          .setCustomAnimations(R.anim.slide_in_right, R.anim.zoom_out, R.anim.zoom_in,
-              R.anim.slide_out_right)
-          .replace(R.id.permission_container, appDetailsFragment)
-          .addToBackStack("appdetail")
-          .commit();
-    });
+    ViewCompat.setTransitionName(holder.appIcon, String.valueOf(position) + "_icon");
   }
 
   @Override public int getItemCount() {
@@ -59,13 +46,20 @@ public class AppListAdapter extends RecyclerView.Adapter<AppListAdapter.AppListV
   }
 
   static class AppListViewHolder extends RecyclerView.ViewHolder {
+    private final IAppListPresenter<IAppListView> appListPresenter;
     ImageView appIcon;
     TextView appName;
 
-    public AppListViewHolder(View itemView) {
+    public AppListViewHolder(View itemView, IAppListPresenter<IAppListView> appListPresenter) {
       super(itemView);
-      appIcon = (ImageView) itemView.findViewById(R.id.app_icon_iv);
-      appName = (TextView) itemView.findViewById(R.id.app_name_tv);
+      appIcon = itemView.findViewById(R.id.app_icon_iv);
+      appName = itemView.findViewById(R.id.app_name_tv);
+      this.appListPresenter = appListPresenter;
+      bindEvents();
+    }
+
+    private void bindEvents() {
+      itemView.setOnClickListener(v -> appListPresenter.onListItemClicked(getAdapterPosition()));
     }
   }
 }

@@ -12,4 +12,6 @@ public interface IAppListPresenter<V extends IAppListView> extends IMVPPresenter
   AppDetails getItemAt(int position);
 
   int getItemCount();
+
+  void onListItemClicked(int adapterPosition);
 }

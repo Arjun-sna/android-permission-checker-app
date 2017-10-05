@@ -1,6 +1,7 @@
 package in.arjsna.permissionchecker.applicationslist;
 
 import in.arjsna.permissionchecker.basemvp.IMVPView;
+import in.arjsna.permissionchecker.models.AppDetails;
 
 public interface IAppListView extends IMVPView {
   void setTitle(String title);
@@ -15,4 +16,5 @@ public interface IAppListView extends IMVPView {
 
   void notifyListAdapter();
 
+  void showFullDetails(AppDetails appDetails, int position);
 }

@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import in.arjsna.permissionchecker.AppDetailsFragment;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
+import in.arjsna.permissionchecker.models.AppDetails;
 import javax.inject.Inject;
 
 /**
@@ -91,5 +93,22 @@ public class AppListFragment extends BaseFragment implements IAppListView {
 
   @Override public void notifyListAdapter() {
     appListAdapter.notifyDataSetChanged();
+  }
+
+  @Override public void showFullDetails(AppDetails appDetails, int position) {
+    Bundle bundle = new Bundle();
+    bundle.putString("package_name", appDetails.packageName);
+    AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
+    appDetailsFragment.setArguments(bundle);
+    getActivity().getSupportFragmentManager()
+        .beginTransaction()
+        .addSharedElement(
+            ((AppListAdapter.AppListViewHolder) mAppListView.findViewHolderForAdapterPosition(
+                position)).appIcon, "icon_transition")
+        .setCustomAnimations(R.anim.zoom_in, R.anim.slide_out_right, R.anim.slide_in_right,
+            R.anim.zoom_out)
+        .replace(R.id.permission_container, appDetailsFragment)
+        .addToBackStack("appdetail")
+        .commit();
   }
 }

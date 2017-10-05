@@ -18,6 +18,7 @@
         android:id="@+id/app_icon_iv"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:transitionName="@string/icon_transition"
         />
     <TextView
         android:id="@+id/app_name_tv"

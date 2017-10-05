@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import in.arjsna.permissionchecker.models.AppDetails;
 import in.arjsna.permissionchecker.basemvp.BasePresenter;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
+import in.arjsna.permissionchecker.models.AppDetails;
 import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -106,5 +106,9 @@ public class AppListPresenterImpl<V extends IAppListView> extends BasePresenter<
 
   @Override public int getItemCount() {
     return appDetailList == null ? 0 : appDetailList.size();
+  }
+
+  @Override public void onListItemClicked(int adapterPosition) {
+    getView().showFullDetails(appDetailList.get(adapterPosition), adapterPosition);
   }
 }
