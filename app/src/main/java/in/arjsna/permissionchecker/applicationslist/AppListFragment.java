@@ -12,8 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.mindorks.nybus.NYBus;
+import com.mindorks.nybus.annotation.Subscribe;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.appdetails.AppDetailsFragment;
+import in.arjsna.permissionchecker.appdetails.AppUninstallEvent;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
 import in.arjsna.permissionchecker.models.AppDetails;
 import javax.inject.Inject;
@@ -35,6 +38,7 @@ public class AppListFragment extends BaseFragment implements IAppListView {
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setRetainInstance(true);
+    NYBus.get().register(this);
   }
 
   @Nullable @Override
@@ -96,18 +100,28 @@ public class AppListFragment extends BaseFragment implements IAppListView {
   }
 
   @Override public void showFullDetails(AppDetails appDetails, int position) {
-    Bundle bundle = new Bundle();
-    bundle.putString("package_name", appDetails.packageName);
-    AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
-    appDetailsFragment.setArguments(bundle);
     getActivity().getSupportFragmentManager()
         .beginTransaction()
         .addSharedElement(
             ((AppListAdapter.AppListViewHolder) mAppListView.findViewHolderForAdapterPosition(
                 position)).appIcon, "icon_transition")
         .setCustomAnimations(R.anim.zoom_in, R.anim.zoom_out, R.anim.zoom_in, R.anim.zoom_out)
-        .replace(R.id.permission_container, appDetailsFragment)
+        .replace(R.id.permission_container,
+            AppDetailsFragment.getInstance(appDetails.packageName, position))
         .addToBackStack("appdetail")
         .commit();
+  }
+
+  @Subscribe public void onEvent(AppUninstallEvent event) {
+    appListPresenter.onItemRemoved(event.positionOfAppInList);
+  }
+
+  @Override public void notifyItemRemoved(int positionOfAppInList) {
+    appListAdapter.notifyItemRemoved(positionOfAppInList);
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    NYBus.get().unregister(this);
   }
 }

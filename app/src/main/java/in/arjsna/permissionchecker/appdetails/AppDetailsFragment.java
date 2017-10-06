@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.mindorks.nybus.NYBus;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.Transition;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
@@ -31,6 +33,7 @@ import javax.inject.Inject;
 
 public class AppDetailsFragment extends BaseFragment implements IAppDetailsView {
   private static final int UNINSTALL_APP_REQUEST = 500;
+  private static final int APP_SETTINGS_REQUEST = 501;
   private View mRootView;
   private ImageView appIcon;
   private TextView packageNameTv;
@@ -44,6 +47,16 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
   @Inject public PermissionListAdapter permissionListAdapter;
 
   @Inject IAppDetailsPresenter<IAppDetailsView> appDetailsPresenter;
+  private int mPositionInList;
+
+  public static AppDetailsFragment getInstance(String packageName, int position) {
+    Bundle bundle = new Bundle();
+    bundle.putString("package_name", packageName);
+    bundle.putInt("item_position", position);
+    AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
+    appDetailsFragment.setArguments(bundle);
+    return appDetailsFragment;
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -62,6 +75,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
       appDetailsPresenter.onAttach(this);
     }
     mPackageName = getArguments().getString("package_name");
+    mPositionInList = getArguments().getInt("item_position");
     appDetailsPresenter.onIntentDataAvailable(mPackageName);
     initialiseViews();
     bindEvents();
@@ -79,7 +93,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
       intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
       Uri uri = Uri.fromParts("package", mPackageName, null);
       intent.setData(uri);
-      startActivity(intent);
+      startActivityForResult(intent, APP_SETTINGS_REQUEST);
     });
     RxView.clicks(uninstall).subscribe(o -> {
       Intent intent =
@@ -119,6 +133,8 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
     if (requestCode == UNINSTALL_APP_REQUEST) {
       switch (resultCode) {
         case Activity.RESULT_OK:
+          appDetailsPresenter.onDataChanged();
+          NYBus.get().post(new AppUninstallEvent(mPositionInList));
           getActivity().onBackPressed();
           break;
         case Activity.RESULT_CANCELED:
@@ -128,6 +144,9 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
           Toast.makeText(getContext(), "Failed to uninstall the app.", Toast.LENGTH_LONG).show();
       }
       return;
+    } else if (requestCode == APP_SETTINGS_REQUEST) {
+      Log.i("Debug", " result");
+      appDetailsPresenter.onSettingsChanged(mPackageName);
     }
     super.onActivityResult(requestCode, resultCode, data);
   }
