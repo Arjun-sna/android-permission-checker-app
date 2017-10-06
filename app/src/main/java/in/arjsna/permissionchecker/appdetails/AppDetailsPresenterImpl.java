@@ -111,4 +111,8 @@ public class AppDetailsPresenterImpl<V extends IAppDetailsView> extends BasePres
   private void setPermissionDetails(ArrayList<PermissionDetail> permissionDetails) {
     this.permissionDetails = permissionDetails;
   }
+
+  @Override public void onDataChanged() {
+    getDataProvider().refreshData();
+  }
 }

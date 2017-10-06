@@ -119,6 +119,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
     if (requestCode == UNINSTALL_APP_REQUEST) {
       switch (resultCode) {
         case Activity.RESULT_OK:
+          appDetailsPresenter.onDataChanged();
           getActivity().onBackPressed();
           break;
         case Activity.RESULT_CANCELED:

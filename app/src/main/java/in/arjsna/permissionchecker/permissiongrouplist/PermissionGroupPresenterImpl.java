@@ -36,10 +36,6 @@ public class PermissionGroupPresenterImpl<V extends IPermissionGroupView> extend
   }
 
   private void fetchData() {
-    if (permissionList != null && permissionList.size() > 0) {
-      getView().notifyListAdapter();
-      return;
-    }
     getView().showProgressBar();
     getView().hideListView();
     getCompositeDisposable().add(getDataProvider().getPermissionGroups(false)

@@ -24,8 +24,7 @@ public class AppListPresenterImpl<V extends IAppListView> extends BasePresenter<
   }
 
   private void getAppDetails() {
-    if (appDetailList != null && appDetailList.size() > 0) {
-      getView().notifyListAdapter();
+    if (appDetailList != null) {
       return;
     }
     getView().showProgressBar();
@@ -38,8 +37,10 @@ public class AppListPresenterImpl<V extends IAppListView> extends BasePresenter<
           @Override public void onSuccess(ArrayList<AppDetails> appDetails) {
             getView().hideProgressBar();
             getView().showListView();
-            appDetailList = appDetails;
-            getView().notifyListAdapter();
+            if (appDetailList != appDetails) {
+              appDetailList = appDetails;
+              getView().notifyListAdapter();
+            }
           }
 
           @Override public void onError(Throwable e) {

@@ -198,4 +198,9 @@ public class DataProvider {
     miscPermissionGroup.appsCount = 0;
     permissionGroupDetailsMap.put("z_MISC", miscPermissionGroup);
   }
+
+  public void refreshData() {
+    fetchPermList();
+    fetchAllAppDetails();
+  }
 }
