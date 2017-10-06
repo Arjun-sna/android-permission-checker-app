@@ -7,14 +7,17 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.util.Log;
 import in.arjsna.permissionchecker.models.AppDetails;
 import in.arjsna.permissionchecker.models.PermissionGroupDetails;
 import io.reactivex.Single;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
 
 public class DataProvider {
 
@@ -25,6 +28,18 @@ public class DataProvider {
 
   public DataProvider(Context context) {
     this.context = context;
+  }
+
+  public Single<AppDetails> getAppDetailsFor(String packageName, boolean refresh) {
+    return Single.fromCallable(() -> {
+      if (!refresh) {
+        return packageDetailsMap.get(packageName);
+      } else {
+        AppDetails appDetails = fetchDetail(packageName);
+        packageDetailsMap.put(packageName, appDetails);
+        return appDetails;
+      }
+    });
   }
 
   public Single<ArrayList<PermissionGroupDetails>> getPermissionGroups(boolean refresh) {
@@ -83,11 +98,26 @@ public class DataProvider {
     PackageManager packageManager = context.getPackageManager();
     AppDetails appDetails = new AppDetails();
     try {
-      ApplicationInfo applicationInfo =
-          packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
-      appDetails.name = applicationInfo.loadLabel(packageManager).toString();
-      appDetails.icon = packageManager.getApplicationIcon(packageName);
+      PackageInfo packageInfo = packageManager.getPackageInfo(packageName,
+          PackageManager.GET_META_DATA | PackageManager.GET_PERMISSIONS);
+      appDetails.name = packageInfo.applicationInfo.loadLabel(packageManager).toString();
+      appDetails.icon = packageInfo.applicationInfo.loadIcon(packageManager);
       appDetails.packageName = packageName;
+      if (packageInfo.requestedPermissions != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+          for (int index = 0; index < packageInfo.requestedPermissions.length; index++) {
+            if ((packageInfo.requestedPermissionsFlags[index]
+                & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0) {
+              appDetails.grantedPermissionList.add(packageInfo.requestedPermissions[index]);
+            } else {
+              appDetails.deniedPermissionList.add(packageInfo.requestedPermissions[index]);
+            }
+          }
+        } else {
+          appDetails.grantedPermissionList =
+              new ArrayList<>(Arrays.asList(packageInfo.requestedPermissions));
+        }
+      }
     } catch (PackageManager.NameNotFoundException e) {
       e.printStackTrace();
     }
