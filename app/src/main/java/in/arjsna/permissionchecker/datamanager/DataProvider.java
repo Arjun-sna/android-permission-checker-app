@@ -2,21 +2,26 @@ package in.arjsna.permissionchecker.datamanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ResolveInfo;
 import android.util.Log;
+import in.arjsna.permissionchecker.models.AppDetails;
 import in.arjsna.permissionchecker.models.PermissionGroupDetails;
 import io.reactivex.Single;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 public class DataProvider {
 
   private final Context context;
   private ArrayList<PermissionGroupDetails> permissionGroupDetails;
+  private ArrayList<AppDetails> allAppDetailList;
+  private Map<String, AppDetails> packageDetailsMap;
 
   public DataProvider(Context context) {
     this.context = context;
@@ -29,6 +34,64 @@ public class DataProvider {
       }
       return permissionGroupDetails;
     });
+  }
+
+  public Single<ArrayList<AppDetails>> getAppDetailsList(boolean refresh) {
+    return getAppDetailsList(null, refresh);
+  }
+
+  public Single<ArrayList<AppDetails>> getAppDetailsList(ArrayList<String> packages,
+      boolean refresh) {
+    return Single.fromCallable(() -> {
+      if (packageDetailsMap == null || packageDetailsMap.size() == 0 || refresh) {
+        fetchAllAppDetails();
+      }
+      return getDetailsFor(packages);
+    });
+  }
+
+  private ArrayList<AppDetails> getDetailsFor(ArrayList<String> packages) {
+    if (packages == null) {
+      return allAppDetailList;
+    } else {
+      ArrayList<AppDetails> appDetails = new ArrayList<>();
+      for (String packageName : packages) {
+        if (packageDetailsMap.containsKey(packageName)) {
+          appDetails.add(packageDetailsMap.get(packageName));
+        }
+      }
+      return appDetails;
+    }
+  }
+
+  private void fetchAllAppDetails() {
+    allAppDetailList = new ArrayList<>();
+    packageDetailsMap = new TreeMap<>();
+    Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+    mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+    PackageManager packageManager = context.getPackageManager();
+    List<ResolveInfo> applicationInfos =
+        packageManager.queryIntentActivities(mainIntent, PackageManager.GET_META_DATA);
+    for (ResolveInfo resolveInfo : applicationInfos) {
+      AppDetails appDetails = fetchDetail(resolveInfo.activityInfo.packageName);
+      allAppDetailList.add(appDetails);
+      packageDetailsMap.put(resolveInfo.activityInfo.packageName, appDetails);
+    }
+  }
+
+  private AppDetails fetchDetail(String packageName) {
+    PackageManager packageManager = context.getPackageManager();
+    AppDetails appDetails = new AppDetails();
+    try {
+      ApplicationInfo applicationInfo =
+          packageManager.getApplicationInfo(packageName, PackageManager.GET_META_DATA);
+      appDetails.name = applicationInfo.loadLabel(packageManager).toString();
+      appDetails.icon = packageManager.getApplicationIcon(packageName);
+      appDetails.packageName = packageName;
+    } catch (PackageManager.NameNotFoundException e) {
+      e.printStackTrace();
+    }
+    return appDetails;
   }
 
   private void fetchPermList() {

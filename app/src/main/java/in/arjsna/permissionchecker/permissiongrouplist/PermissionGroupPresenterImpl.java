@@ -24,7 +24,7 @@ public class PermissionGroupPresenterImpl<V extends IPermissionGroupView> extend
   }
 
   @Override public void onViewInitialised() {
-    makeRx();
+    fetchData();
   }
 
   @Override public PermissionGroupDetails getItemAt(int position) {
@@ -35,7 +35,7 @@ public class PermissionGroupPresenterImpl<V extends IPermissionGroupView> extend
     return permissionList != null ? permissionList.size() : 0;
   }
 
-  private void makeRx() {
+  private void fetchData() {
     if (permissionList != null && permissionList.size() > 0) {
       getView().notifyListAdapter();
       return;
@@ -58,31 +58,5 @@ public class PermissionGroupPresenterImpl<V extends IPermissionGroupView> extend
 
           }
         }));
-    //
-    //Single.fromCallable(() -> {
-    //  TreeMap<String, PermissionGroupDetails> groups = fetchPermList();
-    //  return new ArrayList<>(groups.values());
-    //})
-    //    .subscribeOn(Schedulers.computation())
-    //    .observeOn(AndroidSchedulers.mainThread())
-    //    .subscribe(new SingleObserver<ArrayList<PermissionGroupDetails>>() {
-    //      @Override public void onSubscribe(@NonNull Disposable d) {
-    //        getView().showProgressBar();
-    //        getView().hideListView();
-    //      }
-    //
-    //      @Override
-    //      public void onSuccess(@NonNull ArrayList<PermissionGroupDetails> groupDetailsList) {
-    //        Log.i("Single subscriber test ", groupDetailsList.size() + " ");
-    //        getView().hideProgressBar();
-    //        getView().showListView();
-    //        permissionList = groupDetailsList;
-    //        getView().notifyListAdapter();
-    //      }
-    //
-    //      @Override public void onError(@NonNull Throwable e) {
-    //
-    //      }
-    //    });
   }
 }
