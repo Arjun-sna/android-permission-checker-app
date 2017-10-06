@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import in.arjsna.permissionchecker.basemvp.BasePresenter;
+import in.arjsna.permissionchecker.datamanager.DataProvider;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import in.arjsna.permissionchecker.models.AppDetails;
 import io.reactivex.Single;
@@ -26,8 +27,8 @@ public class AppListPresenterImpl<V extends IAppListView> extends BasePresenter<
   private ArrayList<String> packages;
 
   @Inject public AppListPresenterImpl(@ActivityContext Context context,
-      CompositeDisposable compositeDisposable) {
-    super(context, compositeDisposable);
+      CompositeDisposable compositeDisposable, DataProvider dataProvider) {
+    super(context, compositeDisposable, dataProvider);
   }
 
   private void getAppDetails() {

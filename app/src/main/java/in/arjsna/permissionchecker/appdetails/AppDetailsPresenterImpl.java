@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import in.arjsna.permissionchecker.basemvp.BasePresenter;
+import in.arjsna.permissionchecker.datamanager.DataProvider;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
 import in.arjsna.permissionchecker.models.AppDetails;
 import in.arjsna.permissionchecker.models.PermissionDetail;
@@ -25,8 +26,8 @@ public class AppDetailsPresenterImpl<V extends IAppDetailsView> extends BasePres
   private ArrayList<PermissionDetail> permissionDetails;
 
   @Inject public AppDetailsPresenterImpl(@ActivityContext Context context,
-      CompositeDisposable compositeDisposable) {
-    super(context, compositeDisposable);
+      CompositeDisposable compositeDisposable, DataProvider dataProvider) {
+    super(context, compositeDisposable, dataProvider);
   }
 
   @Override public void onViewInitialised() {
