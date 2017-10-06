@@ -13,4 +13,6 @@ public interface IAppDetailsPresenter<V extends IAppDetailsView> extends IMVPPre
   int getItemCount();
 
   void onDataChanged();
+
+  void onSettingsChanged(String mPackageName);
 }

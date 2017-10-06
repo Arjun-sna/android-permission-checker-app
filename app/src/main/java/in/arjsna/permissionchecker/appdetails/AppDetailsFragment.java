@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ import javax.inject.Inject;
 
 public class AppDetailsFragment extends BaseFragment implements IAppDetailsView {
   private static final int UNINSTALL_APP_REQUEST = 500;
+  private static final int APP_SETTINGS_REQUEST = 501;
   private View mRootView;
   private ImageView appIcon;
   private TextView packageNameTv;
@@ -91,7 +93,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
       intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
       Uri uri = Uri.fromParts("package", mPackageName, null);
       intent.setData(uri);
-      startActivity(intent);
+      startActivityForResult(intent, APP_SETTINGS_REQUEST);
     });
     RxView.clicks(uninstall).subscribe(o -> {
       Intent intent =
@@ -142,6 +144,9 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
           Toast.makeText(getContext(), "Failed to uninstall the app.", Toast.LENGTH_LONG).show();
       }
       return;
+    } else if (requestCode == APP_SETTINGS_REQUEST) {
+      Log.i("Debug", " result");
+      appDetailsPresenter.onSettingsChanged(mPackageName);
     }
     super.onActivityResult(requestCode, resultCode, data);
   }

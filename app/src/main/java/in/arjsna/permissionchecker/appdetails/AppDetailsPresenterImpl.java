@@ -29,7 +29,7 @@ public class AppDetailsPresenterImpl<V extends IAppDetailsView> extends BasePres
   }
 
   @Override public void onIntentDataAvailable(String mPackageName) {
-    fetchDetails(mPackageName);
+    fetchDetails(mPackageName, false);
   }
 
   @Override public PermissionDetail getItemAt(int position) {
@@ -40,8 +40,8 @@ public class AppDetailsPresenterImpl<V extends IAppDetailsView> extends BasePres
     return permissionDetails == null ? 0 : permissionDetails.size();
   }
 
-  private void fetchDetails(final String packageName) {
-    getCompositeDisposable().add(getDataProvider().getAppDetailsFor(packageName, false)
+  private void fetchDetails(final String packageName, boolean refresh) {
+    getCompositeDisposable().add(getDataProvider().getAppDetailsFor(packageName, refresh)
         .doOnSuccess(this::setAppDetails)
         .map(appDetails -> {
           ArrayList<PermissionDetail> permissionDetails = new ArrayList<>();
@@ -114,5 +114,9 @@ public class AppDetailsPresenterImpl<V extends IAppDetailsView> extends BasePres
 
   @Override public void onDataChanged() {
     getDataProvider().refreshData();
+  }
+
+  @Override public void onSettingsChanged(String packageName) {
+    fetchDetails(packageName, true);
   }
 }
