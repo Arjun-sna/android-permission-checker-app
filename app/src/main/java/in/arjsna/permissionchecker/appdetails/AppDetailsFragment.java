@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.mindorks.nybus.NYBus;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.Transition;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
@@ -44,6 +45,16 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
   @Inject public PermissionListAdapter permissionListAdapter;
 
   @Inject IAppDetailsPresenter<IAppDetailsView> appDetailsPresenter;
+  private int mPositionInList;
+
+  public static AppDetailsFragment getInstance(String packageName, int position) {
+    Bundle bundle = new Bundle();
+    bundle.putString("package_name", packageName);
+    bundle.putInt("item_position", position);
+    AppDetailsFragment appDetailsFragment = new AppDetailsFragment();
+    appDetailsFragment.setArguments(bundle);
+    return appDetailsFragment;
+  }
 
   @Override public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -62,6 +73,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
       appDetailsPresenter.onAttach(this);
     }
     mPackageName = getArguments().getString("package_name");
+    mPositionInList = getArguments().getInt("item_position");
     appDetailsPresenter.onIntentDataAvailable(mPackageName);
     initialiseViews();
     bindEvents();
@@ -120,6 +132,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
       switch (resultCode) {
         case Activity.RESULT_OK:
           appDetailsPresenter.onDataChanged();
+          NYBus.get().post(new AppUninstallEvent(mPositionInList));
           getActivity().onBackPressed();
           break;
         case Activity.RESULT_CANCELED:

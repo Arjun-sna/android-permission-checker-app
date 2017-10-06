@@ -69,4 +69,9 @@ public class AppListPresenterImpl<V extends IAppListView> extends BasePresenter<
   @Override public void onListItemClicked(int adapterPosition) {
     getView().showFullDetails(appDetailList.get(adapterPosition), adapterPosition);
   }
+
+  @Override public void onItemRemoved(int positionOfAppInList) {
+    appDetailList.remove(positionOfAppInList);
+    getView().notifyItemRemoved(positionOfAppInList);
+  }
 }

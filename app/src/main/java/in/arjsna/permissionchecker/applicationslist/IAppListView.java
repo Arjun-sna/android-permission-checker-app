@@ -17,4 +17,6 @@ public interface IAppListView extends IMVPView {
   void notifyListAdapter();
 
   void showFullDetails(AppDetails appDetails, int position);
+
+  void notifyItemRemoved(int positionOfAppInList);
 }
