@@ -15,4 +15,10 @@ public interface IAppDetailsPresenter<V extends IAppDetailsView> extends IMVPPre
   void onDataChanged();
 
   void onSettingsChanged(String mPackageName);
+
+  void extractAndSaveApk();
+
+  void onPermissionDenied();
+
+  void onPermissionGranted();
 }

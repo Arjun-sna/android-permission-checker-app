@@ -103,6 +103,7 @@ public class DataProvider {
       appDetails.name = packageInfo.applicationInfo.loadLabel(packageManager).toString();
       appDetails.icon = packageInfo.applicationInfo.loadIcon(packageManager);
       appDetails.packageName = packageName;
+      appDetails.publicSrcDir = packageInfo.applicationInfo.publicSourceDir;
       if (packageInfo.requestedPermissions != null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
           for (int index = 0; index < packageInfo.requestedPermissions.length; index++) {

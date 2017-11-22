@@ -94,8 +94,24 @@
           android:layout_marginEnd="5dp"
           app:layout_constraintTop_toBottomOf="@+id/app_picture"
           app:layout_constraintLeft_toRightOf="@+id/open_app"
-          app:layout_constraintRight_toLeftOf="@+id/app_uninstall"
+          app:layout_constraintRight_toLeftOf="@+id/extract_apk"
           />
+      <TextView
+          android:id="@+id/extract_apk"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:text="@string/extract_apk"
+          android:background="@drawable/green_btn_bg"
+          android:textColor="@color/white"
+          android:gravity="center"
+          android:layout_marginTop="10dp"
+          android:padding="10dp"
+          android:layout_marginRight="5dp"
+          android:layout_marginEnd="5dp"
+          app:layout_constraintTop_toBottomOf="@+id/app_picture"
+          app:layout_constraintLeft_toRightOf="@+id/app_details"
+          app:layout_constraintRight_toLeftOf="@+id/app_uninstall"
+      />
       <TextView
           android:id="@+id/app_uninstall"
           android:layout_width="0dp"
@@ -107,7 +123,7 @@
           android:layout_marginTop="10dp"
           android:padding="10dp"
           app:layout_constraintTop_toBottomOf="@+id/app_picture"
-          app:layout_constraintLeft_toRightOf="@+id/app_details"
+          app:layout_constraintLeft_toRightOf="@+id/extract_apk"
           app:layout_constraintRight_toRightOf="parent"
           />
     </android.support.constraint.ConstraintLayout>

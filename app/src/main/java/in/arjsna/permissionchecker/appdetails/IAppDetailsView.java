@@ -15,4 +15,10 @@ public interface IAppDetailsView extends IMVPView {
   void setPermissionCount(int count);
 
   void notifyAdapter();
+
+  void requestForStoragePermission();
+
+  void onExtractionComplete(String s);
+
+  void showError(String s);
 }
