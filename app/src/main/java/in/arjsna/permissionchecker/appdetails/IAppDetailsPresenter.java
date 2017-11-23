@@ -21,4 +21,6 @@ public interface IAppDetailsPresenter<V extends IAppDetailsView> extends IMVPPre
   void onPermissionDenied();
 
   void onPermissionGranted();
+
+  void extractByReplacing();
 }

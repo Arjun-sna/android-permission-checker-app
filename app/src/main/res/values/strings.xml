@@ -7,12 +7,16 @@
   <string name="icon_transition">icon_transition</string>
   <string name="extract_apk">APK</string>
   <string name="permission_denied">Permission Denied</string>
-  <string name="storage_permission_requirement">App need permission to store the generated APK
+  <string name="storage_permission_requirement">App needs permission to store the generated APK
     file.
   </string>
   <string name="done">Ok</string>
   <string name="cancel">Cancel</string>
   <string name="extraction_completed">Extraction Completed</string>
-  <string name="promt_for_opening_folder">file extracted. Open the containing folder?</string>
+  <string name="prompt_for_opening_folder">APK file extracted successfully.</string>
   <string name="open">Open</string>
+  <string name="open_folder">Open Folder</string>
+  <string name="file_exits">File exists</string>
+  <string name="file_exits_detail">APK file for this application already exists.</string>
+  <string name="replace">Replace</string>
 </resources>

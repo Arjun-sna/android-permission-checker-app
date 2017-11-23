@@ -31,7 +31,6 @@ import com.mindorks.nybus.NYBus;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.Transition;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
-import java.io.File;
 import javax.inject.Inject;
 
 /**
@@ -232,20 +231,29 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
   @Override public void onExtractionComplete(String path) {
     AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
         .setTitle(R.string.extraction_completed)
-        .setMessage(R.string.promt_for_opening_folder)
-        .setPositiveButton(R.string.open, (dialog, which) -> {
+        .setMessage(R.string.prompt_for_opening_folder)
+        .setPositiveButton(R.string.open_folder, (dialog, which) -> {
           Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-          intent.setDataAndType(Uri.fromFile(new File(
-              Environment.getExternalStorageDirectory() + "/AppPermissionsExtractedApk")), "*/*");
-          startActivity(intent);
+          intent.setDataAndType(
+              Uri.parse(Environment.getExternalStorageDirectory() + "/AppPermissionsExtractedApk"),
+              "*/*");
+          startActivity(Intent.createChooser(intent, "Open folder"));
         })
-        .setNegativeButton(R.string.cancel, (dialog, which) -> {
-          dialog.dismiss();
-        });
+        .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
     builder.show();
   }
 
-  @Override public void showError(String s) {
+  @Override public void showError(String errorMsg) {
+    Toast.makeText(getContext(), errorMsg, Toast.LENGTH_LONG).show();
+  }
 
+  @Override public void showFileExitsAlert() {
+    AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+        .setTitle(R.string.file_exits)
+        .setMessage(R.string.file_exits_detail)
+        .setPositiveButton(R.string.replace,
+            (dialog, which) -> appDetailsPresenter.extractByReplacing())
+        .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+    builder.show();
   }
 }

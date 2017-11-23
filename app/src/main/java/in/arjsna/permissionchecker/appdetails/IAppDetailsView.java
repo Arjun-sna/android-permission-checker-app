@@ -21,4 +21,6 @@ public interface IAppDetailsView extends IMVPView {
   void onExtractionComplete(String s);
 
   void showError(String s);
+
+  void showFileExitsAlert();
 }
