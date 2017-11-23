@@ -55,5 +55,5 @@ dependencies {
   compile 'javax.inject:javax.inject:1'
   compile 'com.mindorks.nybus:nybus-android:1.0.0'
   compile 'commons-io:commons-io:2.4'
-
+  compile 'com.github.fernandodev.easyratingdialog:easyratingdialog:1.1.2'
 }
