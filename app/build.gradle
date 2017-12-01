@@ -33,27 +33,29 @@ ext {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
   androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
     exclude group: 'com.android.support', module: 'support-annotations'
   })
-  compile "com.android.support:design:${supportLibraryVerion}"
-  compile "com.android.support:recyclerview-v7:${supportLibraryVerion}"
+  implementation "com.android.support:design:${supportLibraryVerion}"
+  implementation "com.android.support:recyclerview-v7:${supportLibraryVerion}"
 
-  compile "com.android.support:appcompat-v7:${supportLibraryVerion}"
-  compile "com.android.support:cardview-v7:${supportLibraryVerion}"
-  compile "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}"
+  implementation "com.android.support:appcompat-v7:${supportLibraryVerion}"
+  implementation "com.android.support:cardview-v7:${supportLibraryVerion}"
+  implementation "com.android.support.constraint:constraint-layout:${constraintLayoutVersion}"
   testCompile 'junit:junit:4.12'
 
-  compile "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}"
-  compile "io.reactivex.rxjava2:rxjava:${rxJavaVersion}"
-  compile 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+  implementation "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}"
+  implementation "io.reactivex.rxjava2:rxjava:${rxJavaVersion}"
+  implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
 
-  compile 'com.google.dagger:dagger:2.11'
+  implementation 'com.google.dagger:dagger:2.11'
   annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-  provided 'javax.annotation:jsr250-api:1.0'
-  compile 'javax.inject:javax.inject:1'
-  compile 'com.mindorks.nybus:nybus-android:1.0.0'
-  compile 'commons-io:commons-io:2.4'
-  compile 'com.github.fernandodev.easyratingdialog:easyratingdialog:1.1.2'
+  implementation 'com.google.dagger:dagger-android:2.11'
+  implementation 'com.google.dagger:dagger-android-support:2.11'
+  annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
+
+  implementation 'com.mindorks.nybus:nybus-android:1.0.0'
+  implementation 'commons-io:commons-io:2.4'
+  implementation 'com.github.fernandodev.easyratingdialog:easyratingdialog:1.1.2'
 }

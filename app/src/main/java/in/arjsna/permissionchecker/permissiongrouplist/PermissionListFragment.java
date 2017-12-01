@@ -29,7 +29,7 @@ public class PermissionListFragment extends BaseFragment implements IPermissionG
   private RecyclerView permissionsList;
   private ProgressBar pb;
   @Inject public PermissionGroupListAdapter permissionGroupListAdapter;
-  @Inject public LinearLayoutManager linearLayoutManager;
+  public LinearLayoutManager linearLayoutManager;
   @Inject Lazy<IPermissionGroupPresenter<IPermissionGroupView>> permissionGroupPresenter;
 
   public PermissionListFragment() {
@@ -41,10 +41,7 @@ public class PermissionListFragment extends BaseFragment implements IPermissionG
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_permission_list, container, false);
-    if (getFragmentComponent() != null) {
-      getFragmentComponent().inject(this);
-      permissionGroupPresenter.get().onAttach(this);
-    }
+    permissionGroupPresenter.get().onAttach(this);
     setUpToolBar();
     initViews();
     return mRootView;
@@ -53,6 +50,7 @@ public class PermissionListFragment extends BaseFragment implements IPermissionG
   private void initViews() {
     pb = mRootView.findViewById(R.id.permission_list_progress_bar);
     permissionsList = mRootView.findViewById(R.id.permission_list);
+    linearLayoutManager = new LinearLayoutManager(getActivity());
     permissionsList.setLayoutManager(linearLayoutManager);
     permissionsList.setAdapter(permissionGroupListAdapter);
     permissionGroupPresenter.get().onViewInitialised();

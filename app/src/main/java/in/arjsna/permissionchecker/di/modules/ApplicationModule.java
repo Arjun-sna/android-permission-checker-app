@@ -9,13 +9,8 @@ import in.arjsna.permissionchecker.di.qualifiers.ApplicationContext;
 import javax.inject.Singleton;
 
 @Module public class ApplicationModule {
-  private final Application application;
-
-  public ApplicationModule(Application application) {
-    this.application = application;
-  }
-
-  @Provides @Singleton @ApplicationContext Context provideApplicationContext() {
+  @Provides @Singleton @ApplicationContext Context provideApplicationContext(
+      Application application) {
     return application.getApplicationContext();
   }
 

@@ -1,17 +1,23 @@
 package in.arjsna.permissionchecker.di.components;
 
-import android.content.Context;
+import android.app.Application;
+import dagger.BindsInstance;
 import dagger.Component;
+import dagger.android.AndroidInjectionModule;
 import in.arjsna.permissionchecker.PermissionsApp;
-import in.arjsna.permissionchecker.datamanager.DataProvider;
+import in.arjsna.permissionchecker.di.modules.MainActivityModule;
 import in.arjsna.permissionchecker.di.modules.ApplicationModule;
-import in.arjsna.permissionchecker.di.qualifiers.ApplicationContext;
 import javax.inject.Singleton;
 
-@Singleton @Component(modules = ApplicationModule.class) public interface ApplicationComponent {
-  void inject(PermissionsApp permissionsAppApp);
+@Singleton
+@Component(modules = { AndroidInjectionModule.class, ApplicationModule.class, ActivityBuilderModule.class})
+public interface ApplicationComponent {
+  @Component.Builder
+  interface Builder {
+    @BindsInstance Builder application(Application application);
 
-  @ApplicationContext Context getContext();
+    ApplicationComponent build();
+  }
 
-  DataProvider getDataProvider();
+  void inject(PermissionsApp permissionsApp);
 }

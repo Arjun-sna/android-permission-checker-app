@@ -77,10 +77,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_app_details, container, false);
-    if (getFragmentComponent() != null) {
-      getFragmentComponent().inject(this);
-      appDetailsPresenter.onAttach(this);
-    }
+    appDetailsPresenter.onAttach(this);
     mPackageName = getArguments().getString("package_name");
     mPositionInList = getArguments().getInt("item_position");
     appDetailsPresenter.onIntentDataAvailable(mPackageName);
@@ -204,17 +201,17 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
   }
 
   private void showRationale() {
-    AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-        .setTitle(R.string.permission_denied)
-        .setMessage(R.string.storage_permission_requirement)
-        .setPositiveButton(R.string.done, (dialog, which) -> {
-          requestForStoragePermission();
-          dialog.dismiss();
-        })
-        .setNegativeButton(R.string.cancel, (dialog, which) -> {
-          appDetailsPresenter.onPermissionDenied();
-          dialog.dismiss();
-        });
+    AlertDialog.Builder builder =
+        new AlertDialog.Builder(getContext()).setTitle(R.string.permission_denied)
+            .setMessage(R.string.storage_permission_requirement)
+            .setPositiveButton(R.string.done, (dialog, which) -> {
+              requestForStoragePermission();
+              dialog.dismiss();
+            })
+            .setNegativeButton(R.string.cancel, (dialog, which) -> {
+              appDetailsPresenter.onPermissionDenied();
+              dialog.dismiss();
+            });
     builder.show();
   }
 
@@ -223,23 +220,23 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
         == PackageManager.PERMISSION_GRANTED) {
       appDetailsPresenter.onPermissionGranted();
     } else {
-      final String[] permissions = new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+      final String[] permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
       requestPermissions(permissions, STORAGE_PERMISSION);
     }
   }
 
   @Override public void onExtractionComplete(String path) {
-    AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-        .setTitle(R.string.extraction_completed)
-        .setMessage(R.string.prompt_for_opening_folder)
-        .setPositiveButton(R.string.open_folder, (dialog, which) -> {
-          Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-          intent.setDataAndType(
-              Uri.parse(Environment.getExternalStorageDirectory() + "/AppPermissionsExtractedApk"),
-              "*/*");
-          startActivity(Intent.createChooser(intent, "Open folder"));
-        })
-        .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+    AlertDialog.Builder builder =
+        new AlertDialog.Builder(getContext()).setTitle(R.string.extraction_completed)
+            .setMessage(R.string.prompt_for_opening_folder)
+            .setPositiveButton(R.string.open_folder, (dialog, which) -> {
+              Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+              intent.setDataAndType(Uri.parse(
+                  Environment.getExternalStorageDirectory() + "/AppPermissionsExtractedApk"),
+                  "*/*");
+              startActivity(Intent.createChooser(intent, "Open folder"));
+            })
+            .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
     builder.show();
   }
 
@@ -248,12 +245,12 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
   }
 
   @Override public void showFileExitsAlert() {
-    AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
-        .setTitle(R.string.file_exits)
-        .setMessage(R.string.file_exits_detail)
-        .setPositiveButton(R.string.replace,
-            (dialog, which) -> appDetailsPresenter.extractByReplacing())
-        .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
+    AlertDialog.Builder builder =
+        new AlertDialog.Builder(getContext()).setTitle(R.string.file_exits)
+            .setMessage(R.string.file_exits_detail)
+            .setPositiveButton(R.string.replace,
+                (dialog, which) -> appDetailsPresenter.extractByReplacing())
+            .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
     builder.show();
   }
 }
