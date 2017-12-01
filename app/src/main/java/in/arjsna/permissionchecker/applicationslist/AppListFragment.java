@@ -45,10 +45,7 @@ public class AppListFragment extends BaseFragment implements IAppListView {
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
     mRootView = inflater.inflate(R.layout.fragment_app_list, container, false);
-    if (getFragmentComponent() != null) {
-      getFragmentComponent().inject(this);
-      appListPresenter.onAttach(this);
-    }
+    appListPresenter.onAttach(this);
     if (getArguments() != null) {
       appListPresenter.onIntentDataAvailable(getArguments().getStringArrayList("packages"));
     }
