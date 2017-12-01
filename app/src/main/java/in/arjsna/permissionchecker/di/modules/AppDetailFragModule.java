@@ -8,6 +8,7 @@ import in.arjsna.permissionchecker.appdetails.AppDetailsPresenterImpl;
 import in.arjsna.permissionchecker.appdetails.IAppDetailsPresenter;
 import in.arjsna.permissionchecker.appdetails.IAppDetailsView;
 import in.arjsna.permissionchecker.di.qualifiers.ActivityContext;
+import in.arjsna.permissionchecker.di.scopes.FragmentScope;
 import io.reactivex.disposables.CompositeDisposable;
 
 /**
@@ -20,6 +21,7 @@ public class AppDetailFragModule {
     return new CompositeDisposable();
   }
 
+  @FragmentScope
   @Provides IAppDetailsPresenter<IAppDetailsView> providedAppDetailsPresenter(
       AppDetailsPresenterImpl<IAppDetailsView> appDetailsPresenter) {
     return appDetailsPresenter;

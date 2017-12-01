@@ -10,6 +10,7 @@ import in.arjsna.permissionchecker.di.modules.MainActivityModule;
  */
 @Module
 public abstract class ActivityBuilderModule {
+
   @ContributesAndroidInjector(modules = { MainActivityModule.class, FragmentBuilderModule.class })
   abstract MainActivity contributeMainActivity();
 }
