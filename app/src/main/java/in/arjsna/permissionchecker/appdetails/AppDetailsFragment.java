@@ -3,7 +3,6 @@ package in.arjsna.permissionchecker.appdetails;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -12,7 +11,6 @@ import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,16 +29,20 @@ import com.mindorks.nybus.NYBus;
 import in.arjsna.permissionchecker.R;
 import in.arjsna.permissionchecker.Transition;
 import in.arjsna.permissionchecker.basemvp.BaseFragment;
+import java.util.List;
 import javax.inject.Inject;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * Created by arjun on 7/6/17.
  */
 
-public class AppDetailsFragment extends BaseFragment implements IAppDetailsView {
+public class AppDetailsFragment extends BaseFragment
+    implements IAppDetailsView, EasyPermissions.PermissionCallbacks {
   private static final int UNINSTALL_APP_REQUEST = 500;
   private static final int APP_SETTINGS_REQUEST = 501;
   private static final int STORAGE_PERMISSION = 100;
+  private static final int PERMISSION_GRANT_REQUEST = 502;
   private View mRootView;
   private ImageView appIcon;
   private TextView packageNameTv;
@@ -93,10 +95,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
       startActivity(openAppIntent);
     });
     appDetails.setOnClickListener(v -> {
-      Intent intent = new Intent();
-      intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-      Uri uri = Uri.fromParts("package", mPackageName, null);
-      intent.setData(uri);
+      Intent intent = getSettingsIntent(mPackageName);
       startActivityForResult(intent, APP_SETTINGS_REQUEST);
     });
     RxView.clicks(uninstall).subscribe(o -> {
@@ -108,6 +107,14 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
     RxView.clicks(extractBtn).subscribe(o -> {
       appDetailsPresenter.extractAndSaveApk();
     });
+  }
+
+  @NonNull private Intent getSettingsIntent(String packageName) {
+    Intent intent = new Intent();
+    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+    Uri uri = Uri.fromParts("package", packageName, null);
+    intent.setData(uri);
+    return intent;
   }
 
   private void initialiseViews() {
@@ -153,8 +160,9 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
       }
       return;
     } else if (requestCode == APP_SETTINGS_REQUEST) {
-      Log.i("Debug", " result");
       appDetailsPresenter.onSettingsChanged(mPackageName);
+    } else if (requestCode == PERMISSION_GRANT_REQUEST) {
+      requestForStoragePermission();
     }
     super.onActivityResult(requestCode, resultCode, data);
   }
@@ -185,19 +193,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
-    if (requestCode != STORAGE_PERMISSION) {
-      return;
-    }
-
-    if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      appDetailsPresenter.onPermissionGranted();
-      return;
-    }
-    if (shouldShowRequestPermissionRationale(permissions[0])) {
-      showRationale();
-      return;
-    }
-    appDetailsPresenter.onPermissionDenied();
+    EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
   }
 
   private void showRationale() {
@@ -205,7 +201,7 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
         new AlertDialog.Builder(getContext()).setTitle(R.string.permission_denied)
             .setMessage(R.string.storage_permission_requirement)
             .setPositiveButton(R.string.done, (dialog, which) -> {
-              requestForStoragePermission();
+              startActivityForResult(getSettingsIntent(getActivity().getPackageName()), PERMISSION_GRANT_REQUEST);
               dialog.dismiss();
             })
             .setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -216,12 +212,12 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
   }
 
   public void requestForStoragePermission() {
-    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-        == PackageManager.PERMISSION_GRANTED) {
+    final String[] permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+    if (EasyPermissions.hasPermissions(getActivity(), permissions)) {
       appDetailsPresenter.onPermissionGranted();
     } else {
-      final String[] permissions = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
-      requestPermissions(permissions, STORAGE_PERMISSION);
+      EasyPermissions.requestPermissions(this, getString(R.string.storage_permission_requirement),
+          STORAGE_PERMISSION, permissions);
     }
   }
 
@@ -252,5 +248,17 @@ public class AppDetailsFragment extends BaseFragment implements IAppDetailsView 
                 (dialog, which) -> appDetailsPresenter.extractByReplacing())
             .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.dismiss());
     builder.show();
+  }
+
+  @Override public void onPermissionsGranted(int requestCode, List<String> perms) {
+    appDetailsPresenter.onPermissionGranted();
+  }
+
+  @Override public void onPermissionsDenied(int requestCode, List<String> perms) {
+    if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+      showRationale();
+      return;
+    }
+    appDetailsPresenter.onPermissionDenied();
   }
 }
