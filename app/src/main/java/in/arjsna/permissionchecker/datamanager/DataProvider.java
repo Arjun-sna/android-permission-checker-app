@@ -134,6 +134,7 @@ public class DataProvider {
     TreeMap<String, PermissionGroupDetails> permissionGroupDetailsMap = new TreeMap<>();
     addMiscCategory(permissionGroupDetailsMap);
     addNoPermissionCategory(permissionGroupDetailsMap);
+    int totalAppsCount = applicationInfos.size();
     for (ResolveInfo applicationInfo : applicationInfos) {
       try {
         PackageInfo packageInfo =
@@ -148,6 +149,7 @@ public class DataProvider {
               PermissionGroupDetails groupDetails = permissionGroupDetailsMap.get("z_MISC");
               if (groupDetails.appPackages.add(packageInfo.packageName)) {
                 groupDetails.appsCount++;
+                groupDetails.percentage = (groupDetails.appsCount / (float) totalAppsCount) * 100;
               }
               continue;
             }
@@ -156,6 +158,7 @@ public class DataProvider {
                   permissionGroupDetailsMap.get(permissionInfo.group);
               if (groupDetails.appPackages.add(packageInfo.packageName)) {
                 groupDetails.appsCount++;
+                groupDetails.percentage = (groupDetails.appsCount / (float) totalAppsCount) * 100;
               }
             } else {
               PermissionGroupDetails permissionGroupDetails = new PermissionGroupDetails();
@@ -165,6 +168,7 @@ public class DataProvider {
                       : permissionInfo.loadDescription(packageManager).toString();
               if (permissionGroupDetails.appPackages.add(packageInfo.packageName)) {
                 permissionGroupDetails.appsCount = 1;
+                permissionGroupDetails.percentage = (permissionGroupDetails.appsCount / (float)totalAppsCount) * 100;
               }
               permissionGroupDetailsMap.put(permissionInfo.group, permissionGroupDetails);
             }
