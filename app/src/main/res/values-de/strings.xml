@@ -1,0 +1,20 @@
+<resources>
+  <string name="app_name">Android Berechtigungen</string>
+  <string name="permission_count">%1$d Berechtigungen werden benötigt</string>
+  <string name="open_app">App öffnen</string>
+  <string name="settings">Einstellungen</string>
+  <string name="uninstall">Deinstallieren</string>
+  <string name="icon_transition">icon_transition</string>
+  <string name="extract_apk">APK</string>
+  <string name="permission_denied">Berechtigung verweigert</string>
+  <string name="storage_permission_requirement">Die App braucht die Erlaubnis, die generierte APK Datei zu speichern.</string>
+  <string name="done">Ok</string>
+  <string name="cancel">Abbrechen</string>
+  <string name="extraction_completed">Auspacken erfolgreich</string>
+  <string name="prompt_for_opening_folder">APK Datei wurde erfolgreich extrahiert</string>
+  <string name="open">Öffnen</string>
+  <string name="open_folder">Ordner öffnen</string>
+  <string name="file_exits">Datei existiert</string>
+  <string name="file_exits_detail">APK Datei dieser App existiert bereits</string>
+  <string name="replace">Ersetzen</string>
+</resources>
