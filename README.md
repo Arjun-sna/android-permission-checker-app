@@ -8,7 +8,7 @@ Android App to check requested permission details of all installed applications
       alt="Get it on Google Play"
       height="80">](https://play.google.com/store/apps/details?id=in.arjsna.permissionchecker)
 
-<img src="https://arjun-sna.github.io/raw/permission_app_s2.png" width="250" />  <img src="https://arjun-sna.github.io/raw/permission_app_s1.png" width="250" />  <img src="https://arjun-sna.github.io/raw/permission_app_s3.png" width="250" />
+<img src="https://i.imgur.com/6AO9h2Y.png" width="250" />  <img src="https://i.imgur.com/2ryoVUo.png" width="250" />  <img src="https://i.imgur.com/IT1bD1G.png" width="250" />
 
 This app can be used as a reference for learning
 * RxJava2
