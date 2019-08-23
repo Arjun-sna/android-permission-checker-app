@@ -1,0 +1,21 @@
+<resources>
+  <string name="app_name">Oprávnění v Android</string>
+  <string name="permission_count">Vyžadováno %1$d oprávnění</string>
+  <string name="open_app">Otevřít aplikaci</string>
+  <string name="settings">Nastavení</string>
+  <string name="uninstall">Odinstalace</string>
+  <string name="icon_transition">icon_transition</string>
+  <string name="extract_apk">APK</string>
+  <string name="permission_denied">Přístup odepřen</string>
+  <string name="storage_permission_requirement">Aplikace potřebuje oprávnění pro uložení vytvořeného APK souboru.
+  </string>
+  <string name="done">OK</string>
+  <string name="cancel">Storno</string>
+  <string name="extraction_completed">Extrakce hotova</string>
+  <string name="prompt_for_opening_folder">APK soubor úspěšně extrahován.</string>
+  <string name="open">Otevřít</string>
+  <string name="open_folder">Otevřít složku</string>
+  <string name="file_exits">Soubor existuje</string>
+  <string name="file_exits_detail">APK soubor pro tuto aplikaci už existuje.</string>
+  <string name="replace">Nahradit</string>
+</resources>
